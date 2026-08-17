@@ -68,7 +68,8 @@ workflows:
             c = c.replace(/storeFile\s+file\(['\"]debug\.keystore['\"]\)/, \"storeFile file('upload-keystore.jks')\");
             c = c.replace(/storePassword\s+['\"]android['\"]/, \"storePassword System.getenv('CM_KEYSTORE_PASSWORD')\");
             c = c.replace(/keyAlias\s+['\"]androiddebugkey['\"]/, \"keyAlias System.getenv('CM_KEY_ALIAS')\");
-            c = c.replace(/keyPassword\s+['\"]android['\"]/, \"keyPassword System.getenv('CM_KEY_PASSWORD')\");
+            # PKCS12 keystore: key password == store password
+            c = c.replace(/keyPassword\s+['\"]android['\"]/, \"keyPassword System.getenv('CM_KEYSTORE_PASSWORD')\");
             fs.writeFileSync(f, c);
             console.log('debug signingConfig patched');
           "
