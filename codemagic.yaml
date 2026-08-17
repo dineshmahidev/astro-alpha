@@ -1,6 +1,12 @@
 # Codemagic workflow for MypracticalApp (Expo SDK 54 + native modules)
-# DEBUG build only — produces a debug-signed APK you can install on any device.
-# No keystore / signing variables required.
+# Builds a DEBUG APK signed with the SAME keystore used for release,
+# so the SHA-1 registered in Firebase works on debug and release builds.
+#
+# Env group `android_signing` must contain:
+#   CM_KEYSTORE             base64 of my-upload-key.jks
+#   CM_KEYSTORE_PASSWORD    store password
+#   CM_KEY_ALIAS            key alias
+#   CM_KEY_PASSWORD         key password
 
 workflows:
   react-native-expo-android:
@@ -9,6 +15,8 @@ workflows:
     environment:
       vars:
         EXPO_PUBLIC_API_URL: ""
+      groups:
+        - android_signing
     scripts:
       - name: Install dependencies
         script: |
@@ -16,6 +24,30 @@ workflows:
       - name: Generate native Android project
         script: |
           npx expo prebuild --platform android --clean
+      - name: Configure signing (debug + release use the same keystore)
+        script: |
+          cp "$CM_KEYSTORE_PATH" android/app/upload-keystore.jks
+          # release signing properties (Expo native support)
+          echo "MYAPP_UPLOAD_STORE_FILE=upload-keystore.jks" >> android/gradle.properties
+          echo "MYAPP_UPLOAD_KEY_ALIAS=$CM_KEY_ALIAS" >> android/gradle.properties
+          echo "MYAPP_UPLOAD_STORE_PASSWORD=$CM_KEYSTORE_PASSWORD" >> android/gradle.properties
+          echo "MYAPP_UPLOAD_KEY_PASSWORD=$CM_KEY_PASSWORD" >> android/gradle.properties
+          # patch debug signingConfig to use the same keystore
+          node -e "
+            const fs = require('fs');
+            const f = 'android/app/build.gradle';
+            let c = fs.readFileSync(f, 'utf8');
+            c = c.replace(/storeFile file\('debug\.keystore'\)/, \"storeFile file('upload-keystore.jks')\");
+            c = c.replace(/storePassword 'android'/, 'storePassword process.env.CM_KEYSTORE_PASSWORD');
+            c = c.replace(/keyAlias 'androiddebugkey'/, 'keyAlias process.env.CM_KEY_ALIAS');
+            c = c.replace(/keyPassword 'android'/, 'keyPassword process.env.CM_KEY_PASSWORD');
+            fs.writeFileSync(f, c);
+            console.log('debug signingConfig patched');
+          "
+      - name: Print fingerprint (register this SHA-1 in Firebase)
+        script: |
+          keytool -list -v -keystore "$CM_KEYSTORE_PATH" -alias "$CM_KEY_ALIAS" -storepass "$CM_KEYSTORE_PASSWORD" \
+            | grep -E "SHA1|SHA256" || true
       - name: Build debug APK
         script: |
           cd android

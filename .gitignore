@@ -23,6 +23,7 @@ google-services.json
 GoogleService-Info.plist
 KEYSTORE.md
 upload-keystore.jks
+keystore-base64.txt
 
 # Metro
 .metro-health-check*
