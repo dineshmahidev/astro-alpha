@@ -18,6 +18,12 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
+# Firebase service files (contain secrets) + keystore docs
+google-services.json
+GoogleService-Info.plist
+KEYSTORE.md
+upload-keystore.jks
+
 # Metro
 .metro-health-check*
 
