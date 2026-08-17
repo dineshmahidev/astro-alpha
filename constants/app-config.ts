@@ -18,7 +18,7 @@ export const appConfig = {
     // Android uses the SHA-1 in your Firebase project, no scheme needed here.
     iosUrlScheme: 'com.googleusercontent.apps.YOUR_IOS_CLIENT_ID',
     // Web client ID from Firebase → Authentication → Sign-in method → Google.
-    webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
+    webClientId: '1086415499988-ramqm1tcu7rsiqs2qmq04rdq08lslc30.apps.googleusercontent.com',
   },
 
   supabase: {
