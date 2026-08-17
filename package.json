@@ -51,7 +51,7 @@
     "react-native-calendar-events": "https://github.com/jitsi/react-native-calendar-events.git#47f068dedfed7c0f72042e093f688eb11624eb7b",
     "react-native-default-preference": "https://github.com/jitsi/react-native-default-preference.git#c9bf63bdc058e3fa2aa0b87b1ee1af240f44ed02",
     "react-native-device-info": "12.1.0",
-    "react-native-gesture-handler": "2.24.0",
+    "react-native-gesture-handler": "~2.28.0",
     "react-native-get-random-values": "1.11.0",
     "react-native-orientation-locker": "https://github.com/jitsi/react-native-orientation-locker.git#fe095651d819cf134624f786b61fc8667862178a",
     "react-native-pager-view": "6.8.1",
