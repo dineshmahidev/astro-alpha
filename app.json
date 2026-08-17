@@ -10,10 +10,12 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "throneapp.myastro.app"
+      "bundleIdentifier": "throneapp.myastro.app",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "package": "throneapp.myastro.app",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -45,17 +47,7 @@
           "minTrackingConfidence": 0.6
         }
       ],
-      [
-        "@react-native-firebase/app",
-        {
-          "android": {
-            "googleServicesFile": "./google-services.json"
-          },
-          "ios": {
-            "googleServicesFile": "./GoogleService-Info.plist"
-          }
-        }
-      ],
+      "@react-native-firebase/app",
       [
         "@react-native-google-signin/google-signin/app.plugin.js",
         {
