@@ -62,7 +62,7 @@
     "react-native-sound": "https://github.com/jitsi/react-native-sound.git#ea13c97b5c2a4ff5e0d9bacbd9ff5e4457fe2c3c",
     "react-native-splash-view": "0.0.18",
     "react-native-svg": "15.12.1",
-    "react-native-video": "6.13.0",
+    "react-native-video": "^6.19.2",
     "react-native-vision-camera": "^4.7.3",
     "react-native-web": "~0.21.0",
     "react-native-webrtc": "124.0.7",
