@@ -8,7 +8,7 @@
 #   CM_KEY_ALIAS            key alias
 #   CM_KEY_PASSWORD         key password
 # Env group `firebase` must contain:
-#   GOOGLE_SERVICES_JSON    base64 of google-services.json (Android, pkg com.myastro.app)
+#   GOOGLE_SERVICES_JSON    base64 of google-services.json (Android, pkg throneapp.myastro.app)
 #   GOOGLE_SERVICE_INFO     base64 of GoogleService-Info.plist (iOS, optional for Android)
 
 workflows:
