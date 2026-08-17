@@ -33,6 +33,21 @@ workflows:
       - name: Generate native Android project
         script: |
           npx expo prebuild --platform android --clean
+      - name: Configure Jitsi Gradle requirements
+        script: |
+          # Jitsi SDK requires gradlePluginVersion in root ext (Expo SDK 54 uses AGP 8.5.0)
+          node -e "
+            const fs = require('fs');
+            const f = 'android/build.gradle';
+            let c = fs.readFileSync(f, 'utf8');
+            if (!c.includes('gradlePluginVersion')) {
+              c = c.replace(/ext\s*\{/, 'ext {\n        gradlePluginVersion = \"8.5.0\"');
+              fs.writeFileSync(f, c);
+              console.log('gradlePluginVersion added');
+            } else {
+              console.log('gradlePluginVersion already present');
+            }
+          "
       - name: Configure signing (debug + release use the same keystore)
         script: |
           cp "$CM_KEYSTORE_PATH" android/app/upload-keystore.jks
