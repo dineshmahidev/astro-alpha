@@ -23,6 +23,12 @@ workflows:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
+      - name: Download MediaPipe hand model
+        script: |
+          mkdir -p assets
+          curl -L -o assets/hand_landmarker.task \
+            https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+          ls -la assets/hand_landmarker.task
       - name: Decode Firebase config files
         script: |
           echo "$GOOGLE_SERVICES_JSON" | base64 --decode > google-services.json
