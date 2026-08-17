@@ -53,14 +53,14 @@ workflows:
             fs.writeFileSync(f, c);
             console.log('debug signingConfig patched');
           "
-      - name: Print fingerprint (register this SHA-1 in Firebase)
-        script: |
-          keytool -list -v -keystore "$CM_KEYSTORE_PATH" -alias "$CM_KEY_ALIAS" -storepass "$CM_KEYSTORE_PASSWORD" \
-            | grep -E "SHA1|SHA256" || true
       - name: Build debug APK
         script: |
           cd android
           ./gradlew assembleDebug
+      - name: Print fingerprint (register this SHA-1 in Firebase)
+        script: |
+          keytool -list -v -keystore "$CM_KEYSTORE_PATH" -alias "$CM_KEY_ALIAS" -storepass "$CM_KEYSTORE_PASSWORD" \
+            | grep -E "SHA1|SHA256" || true
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
     publishing:
