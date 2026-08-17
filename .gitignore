@@ -27,9 +27,6 @@ keystore-base64.txt
 google-services-base64.txt
 googleservice-info-base64.txt
 
-# MediaPipe model (downloaded during CI build)
-assets/hand_landmarker.task
-
 # Metro
 .metro-health-check*
 
