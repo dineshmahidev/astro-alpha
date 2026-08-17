@@ -13,8 +13,6 @@ workflows:
     name: React Native Expo Android
     max_build_duration: 120
     environment:
-      vars:
-        EXPO_PUBLIC_API_URL: ""
       groups:
         - android_signing
     scripts:
