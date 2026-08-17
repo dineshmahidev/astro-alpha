@@ -7,6 +7,9 @@
 #   CM_KEYSTORE_PASSWORD    store password
 #   CM_KEY_ALIAS            key alias
 #   CM_KEY_PASSWORD         key password
+# Env group `firebase` must contain:
+#   GOOGLE_SERVICES_JSON    base64 of google-services.json (Android, pkg com.myastro.app)
+#   GOOGLE_SERVICE_INFO     base64 of GoogleService-Info.plist (iOS, optional for Android)
 
 workflows:
   react-native-expo-android:
@@ -15,10 +18,18 @@ workflows:
     environment:
       groups:
         - android_signing
+        - firebase
     scripts:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
+      - name: Decode Firebase config files
+        script: |
+          echo "$GOOGLE_SERVICES_JSON" | base64 --decode > google-services.json
+          if [ -n "$GOOGLE_SERVICE_INFO" ]; then
+            echo "$GOOGLE_SERVICE_INFO" | base64 --decode > GoogleService-Info.plist
+          fi
+          ls -la google-services.json
       - name: Generate native Android project
         script: |
           npx expo prebuild --platform android --clean
