@@ -16,7 +16,7 @@ import { ThemedView } from '@/components/themed-view';
 import type { HandDetectionResult } from 'expo-vision-camera-v4-mediapipe';
 
 declare global {
-  function detectHandLandmarks(frame: unknown): HandDetectionResult | null;
+  function handLandmarker(frame: unknown): HandDetectionResult | null;
 }
 
 const ACCENT = '#B09C66';
@@ -98,7 +98,7 @@ export default function PalmReadingScreen() {
   const frameProcessor = useFrameProcessor(
     (frame) => {
       'worklet';
-      const result = detectHandLandmarks(frame);
+      const result = handLandmarker(frame);
       if (result) {
         onFrame(result);
       }
