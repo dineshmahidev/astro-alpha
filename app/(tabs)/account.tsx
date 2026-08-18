@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useAuth } from '@/contexts/auth-context';
 
 const ACCENT = '#B09C66';
 
@@ -21,6 +22,7 @@ const MENU_ITEMS: { icon: IconName; label: string }[] = [
 
 export default function AccountScreen() {
   const router = useRouter();
+  const { user, signOut } = useAuth();
 
   const onPress = (label: string) => {
     switch (label) {
@@ -28,7 +30,7 @@ export default function AccountScreen() {
         router.push('/kundli');
         return;
       case 'Logout':
-        router.replace('/login');
+        signOut().then(() => router.replace('/login'));
         return;
       default:
         Alert.alert(label, `${label} is coming soon.`);
@@ -39,12 +41,16 @@ export default function AccountScreen() {
       <SafeAreaView style={styles.safe} edges={['top']}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
           <View style={styles.profileCard}>
-            <View style={styles.avatar}>
-              <Ionicons name="person" size={34} color="#ffffff" />
-            </View>
+            {user?.photo ? (
+              <Image source={{ uri: user.photo }} style={styles.avatarImage} />
+            ) : (
+              <View style={styles.avatar}>
+                <Ionicons name="person" size={34} color="#ffffff" />
+              </View>
+            )}
             <View style={styles.profileInfo}>
-              <ThemedText style={styles.name}>Rahul Sharma</ThemedText>
-              <ThemedText style={styles.email}>rahul@example.com</ThemedText>
+              <ThemedText style={styles.name}>{user?.name ?? 'Guest User'}</ThemedText>
+              <ThemedText style={styles.email}>{user?.email ?? ''}</ThemedText>
             </View>
             <TouchableOpacity
               style={styles.editBtn}
@@ -105,6 +111,12 @@ const styles = StyleSheet.create({
     backgroundColor: ACCENT,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatarImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: ACCENT,
   },
   profileInfo: { flex: 1, marginLeft: 14 },
   name: { fontSize: 18, fontWeight: 'bold', color: '#EEEDE0' },
