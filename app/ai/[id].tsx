@@ -70,7 +70,7 @@ export default function AIChatScreen() {
       const history = messages
         .filter((m) => !m.text.startsWith("Hi! I'm your"))
         .map((m) => ({ role: m.from === 'user' ? 'user' : 'assistant', content: m.text }));
-      const res = await fetch('https://console.opencode.ai/inference/openai/v1/chat/completions', {
+      const res = await fetch('https://opencode.ai/zen/v1/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,6 +1,12 @@
 # Codemagic workflow for MypracticalApp (Expo SDK 54 + native modules)
-# Builds a DEBUG APK signed with the SAME keystore used for release,
-# so the SHA-1 registered in Firebase works on debug and release builds.
+# Builds a DEBUG APK (with expo-dev-client Dev Launcher) signed with the SAME
+# keystore used for release, so the SHA-1 registered in Firebase works on
+# debug and release builds.
+#
+# The Dev Launcher lets the phone connect to Metro over WiFi (LAN IP) —
+# no USB/adb reverse needed. On the phone: open the app, tap "Enter URL
+# manually", type http://<PC-LAN-IP>:8081 (or scan the exp:// QR from
+# `npx expo start`). Phone and PC must be on the same network.
 #
 # Env group `android_signing` must contain:
 #   CM_KEYSTORE             base64 of my-upload-key.jks
