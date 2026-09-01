@@ -1,49 +1,55 @@
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { useAuth } from '@/contexts/auth-context';
+import { uiStrings } from '@/constants/ui-strings';
+import { isAstrologer, useAuth } from '@/contexts/auth-context';
 
 const ACCENT = '#B09C66';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { signIn, birthDetails, loading } = useAuth();
+  const { user, birthDetails, role, language, loading, resolving, signIn } = useAuth();
   const [signingIn, setSigningIn] = useState(false);
+  const t = uiStrings(language).t;
 
   const handleGoogle = async () => {
     if (signingIn) return;
     setSigningIn(true);
     try {
-      await signIn();
-      router.replace(birthDetails ? '/(tabs)' : '/onboarding');
-    } catch {
+      const { role: resolvedRole } = await signIn();
+      const dest = isAstrologer(resolvedRole) ? '/astrologer' : '/consumer';
+      router.replace(dest);
+    } catch (e) {
       setSigningIn(false);
     }
   };
 
   return (
     <ThemedView style={styles.screen}>
+      <Image source={require('@/assets/images/background.png')} style={StyleSheet.absoluteFill} />
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
         <View style={styles.content}>
           <View style={styles.logoWrap}>
             <View style={styles.logo}>
               <Ionicons name="planet" size={44} color="#ffffff" />
             </View>
-            <ThemedText style={styles.appName}>My Astro</ThemedText>
+            <ThemedText style={styles.appName}>Koshmira</ThemedText>
             <ThemedText style={styles.tagline}>
-              Your daily guide to the stars
+              {t('login.tagline')}
             </ThemedText>
           </View>
 
           <View style={styles.card}>
-            <ThemedText style={styles.cardTitle}>Welcome to My Astro</ThemedText>
+            <ThemedText style={styles.cardTitle}>{t('login.welcome')}</ThemedText>
             <ThemedText style={styles.cardSubtitle}>
-              Sign in with Google to begin your cosmic journey
+              {t('login.subtitle')}
             </ThemedText>
 
             <TouchableOpacity
@@ -56,14 +62,23 @@ export default function LoginScreen() {
                 <>
                   <Ionicons name="logo-google" size={20} color="#ffffff" />
                   <ThemedText style={styles.googleBtnText}>
-                    Continue with Google
+                    {t('login.google')}
                   </ThemedText>
                 </>
               )}
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.guestBtn}
+              onPress={() => router.push('/onboarding')}
+              disabled={signingIn || loading}>
+              <ThemedText style={styles.guestBtnText}>
+                {t('login.guest')}
+              </ThemedText>
+            </TouchableOpacity>
+
             <ThemedText style={styles.privacy}>
-              By continuing you agree to our Terms & Privacy Policy
+              {t('login.privacy')}
             </ThemedText>
           </View>
         </View>
@@ -105,6 +120,18 @@ const styles = StyleSheet.create({
   },
   googleBtnBusy: { opacity: 0.7 },
   googleBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
+  guestBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: ACCENT,
+    backgroundColor: 'transparent',
+    borderRadius: 12,
+    paddingVertical: 14,
+    marginTop: 12,
+  },
+  guestBtnText: { color: ACCENT, fontSize: 16, fontWeight: '700' },
   privacy: {
     fontSize: 12,
     color: '#7E7E78',

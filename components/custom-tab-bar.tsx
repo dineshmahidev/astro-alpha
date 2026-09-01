@@ -4,7 +4,6 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 
-const ACCENT = '#B09C66';
 const GOLD = '#97743B';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -12,7 +11,8 @@ type IconName = keyof typeof Ionicons.glyphMap;
 const ICONS: Record<string, [IconName, IconName]> = {
   index: ['home', 'home-outline'],
   chat: ['chatbubble', 'chatbubble-outline'],
-  astrologer: ['star', 'star-outline'],
+  astrologer: ['grid', 'grid-outline'],
+  'astrologer-payments': ['wallet', 'wallet-outline'],
   palms: ['hand-left', 'hand-left-outline'],
   account: ['person', 'person-outline'],
 };
@@ -21,17 +21,12 @@ const { width: SCREEN_W } = Dimensions.get('window');
 const W = SCREEN_W - 32;
 const H = 66;
 const R = 20;
-const BUMP_R = 32;
-
-const CENTER = Math.floor(5 / 2);
 
 export default function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
   const path = [
     `M ${R} 0`,
-    `H ${W / 2 - BUMP_R}`,
-    `A ${BUMP_R} ${BUMP_R} 0 0 1 ${W / 2 + BUMP_R} 0`,
     `H ${W - R}`,
     `A ${R} ${R} 0 0 1 ${W} ${R}`,
     `V ${H - R}`,
@@ -52,7 +47,9 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const focused = state.index === index;
-          const icon = ICONS[route.name][focused ? 0 : 1];
+          const icons = ICONS[route.name];
+          if (!icons) return null;
+          const icon = icons[focused ? 0 : 1];
 
           const onPress = () => {
             const event = navigation.emit({
@@ -65,21 +62,20 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
             }
           };
 
-          if (index === CENTER) {
-            return (
-              <TouchableOpacity key={route.key} style={styles.item} onPress={onPress} activeOpacity={0.8}>
-                <View style={[styles.raisedBtn, focused && styles.raisedBtnActive]}>
-                  <Ionicons name={icon} size={28} color="#ffffff" />
-                </View>
-                <Text style={styles.label}>{options.title}</Text>
-              </TouchableOpacity>
-            );
-          }
-
           return (
-            <TouchableOpacity key={route.key} style={styles.item} onPress={onPress} activeOpacity={0.8}>
-              <Ionicons name={icon} size={focused ? 26 : 23} color={focused ? GOLD : '#7E7E78'} />
-              <Text style={[styles.label, focused && styles.labelActive]}>{options.title}</Text>
+            <TouchableOpacity
+              key={route.key}
+              style={styles.item}
+              onPress={onPress}
+              activeOpacity={0.7}>
+              <Ionicons
+                name={icon}
+                size={focused ? 24 : 22}
+                color={focused ? GOLD : '#7E7E78'}
+              />
+              <Text style={[styles.label, focused && styles.labelActive]}>
+                {options.title}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -102,29 +98,14 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   item: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 8,
-    gap: 3,
-  },
-  raisedBtn: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: GOLD,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 4,
-    borderColor: '#121212',
-    marginTop: -30,
-    marginBottom: 4,
-  },
-  raisedBtnActive: {
-    backgroundColor: '#B09C66',
+    gap: 1,
+    paddingVertical: 6,
   },
   label: {
     fontSize: 10,

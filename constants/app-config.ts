@@ -18,13 +18,13 @@ export const appConfig = {
     // Android uses the SHA-1 in your Firebase project, no scheme needed here.
     iosUrlScheme: 'com.googleusercontent.apps.YOUR_IOS_CLIENT_ID',
     // Web client ID from Firebase → Authentication → Sign-in method → Google.
-    webClientId: '1086415499988-ramqm1tcu7rsiqs2qmq04rdq08lslc30.apps.googleusercontent.com',
+    webClientId: '1086415499988-cdg19o8t7mutvst6cvjmc6l5hcdhddep.apps.googleusercontent.com',
   },
 
   supabase: {
     // https://app.supabase.com → project → Settings → API
-    url: 'https://YOUR_PROJECT.supabase.co',
-    anonKey: 'YOUR_SUPABASE_ANON_KEY',
+    url: 'https://msdezqttjznjumyhxizv.supabase.co',
+    anonKey: 'sb_publishable_x0MzXmTQbBqVUTiVQ90HbA_ODVDbr0x',
   },
 
   jitsi: {

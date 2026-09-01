@@ -1,17 +1,37 @@
 export type AISpecialist = {
   id: string;
   name: string;
+  nameTa: string;
+  nameHi: string;
   tagline: string;
+  taglineTa: string;
+  taglineHi: string;
   avatar: any;
   icon: string;
   report: string[];
 };
 
+export function getLocalizedName(spec: AISpecialist, language: string): string {
+  if (language === 'ta') return spec.nameTa;
+  if (language === 'hi') return spec.nameHi;
+  return spec.name;
+}
+
+export function getLocalizedTagline(spec: AISpecialist, language: string): string {
+  if (language === 'ta') return spec.taglineTa;
+  if (language === 'hi') return spec.taglineHi;
+  return spec.tagline;
+}
+
 export const AI_SPECIALISTS: AISpecialist[] = [
   {
     id: 'health',
     name: 'Health Advisor',
+    nameTa: 'சுகாதார ஆலோசகர்',
+    nameHi: 'स्वास्थ्य सलाहकार',
     tagline: 'Astro health tips & remedies',
+    taglineTa: 'ஜோதிட சுகாதார குறிப்புகள்',
+    taglineHi: 'ज्योतिष स्वास्थ्य सुझाव',
     avatar: require('@/assets/images/ai-chat/Female_healer_holding_mystical_s__202608170131.jpeg'),
     icon: 'heart',
     report: [
@@ -23,8 +43,12 @@ export const AI_SPECIALISTS: AISpecialist[] = [
   },
   {
     id: 'wealth',
-    name: 'Wealth Guru',
-    tagline: 'Money, career & investments',
+    name: 'Wealth & Business',
+    nameTa: 'செல்வம் & வணிகம்',
+    nameHi: 'धन और व्यापार',
+    tagline: 'Money, career, investments & business',
+    taglineTa: 'பணம், தொழில், முதலீடு & வணிகம்',
+    taglineHi: 'पैसा, करियर, निवेश और व्यापार',
     avatar: require('@/assets/images/ai-chat/Wealth_mystic_holding_golden_pen__202608170131.jpeg'),
     icon: 'cash',
     report: [
@@ -36,8 +60,12 @@ export const AI_SPECIALISTS: AISpecialist[] = [
   },
   {
     id: 'marriage',
-    name: 'Marriage Match',
+    name: 'Marriage & Love',
+    nameTa: 'திருமணம் & காதல்',
+    nameHi: 'विवाह और प्रेम',
     tagline: 'Love, compatibility & timing',
+    taglineTa: 'காதல், பொருத்தம் & நேரம்',
+    taglineHi: 'प्रेम, संगतता और समय',
     avatar: require('@/assets/images/ai-chat/Gothic_oracle_holding_glowing_rings_202608170131.jpeg'),
     icon: 'people',
     report: [
@@ -48,22 +76,13 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     ],
   },
   {
-    id: 'specialist',
-    name: 'Specialist',
-    tagline: 'Deep dive into your chart',
-    avatar: require('@/assets/images/ai-chat/Astrologer_holding_mystical_astr__202608170131.jpeg'),
-    icon: 'medkit',
-    report: [
-      'Your Lagna lord Sun gives a strong, self-driven personality.',
-      'Rahu in the 8th house fuels curiosity for hidden knowledge.',
-      'A balanced daily routine unlocks your full potential.',
-      'Focus on one clear goal to channel planetary energy.',
-    ],
-  },
-  {
     id: 'career',
     name: 'Career Coach',
+    nameTa: 'தொழில் வழிகாட்டி',
+    nameHi: 'करियर कोच',
     tagline: 'Job, growth & promotions',
+    taglineTa: 'வேலை, வளர்ச்சி & பதவி உயர்வு',
+    taglineHi: 'नौकरी, विकास और पदोन्नति',
     avatar: require('@/assets/images/ai-chat/King_holding_golden_staff_202608170131.jpeg'),
     icon: 'briefcase',
     report: [
@@ -76,7 +95,11 @@ export const AI_SPECIALISTS: AISpecialist[] = [
   {
     id: 'education',
     name: 'Education Guide',
+    nameTa: 'கல்வி வழிகாட்டி',
+    nameHi: 'शिक्षा गाइड',
     tagline: 'Studies, exams & focus',
+    taglineTa: 'படிப்பு, தேர்வு & கவனம்',
+    taglineHi: 'पढ़ाई, परीक्षा और ध्यान',
     avatar: require('@/assets/images/ai-chat/Gothic_scholar_holding_ancient_book_202608170131.jpeg'),
     icon: 'school',
     report: [
@@ -87,22 +110,13 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     ],
   },
   {
-    id: 'business',
-    name: 'Business Advisor',
-    tagline: 'Venture, deals & success',
-    avatar: require('@/assets/images/ai-chat/Alchemist_holding_glowing_vial_202608170131.jpeg'),
-    icon: 'storefront',
-    report: [
-      'Mars in the 11th house favors bold business moves.',
-      'Partner decisions go well under Jupiter\'s grace.',
-      'Avoid overextending credit during this Mercury phase.',
-      'Patient planning today yields steady returns.',
-    ],
-  },
-  {
     id: 'family',
     name: 'Family Astrologer',
+    nameTa: 'குடும்ப ஜோதிடர்',
+    nameHi: 'पारिवारिक ज्योतिषी',
     tagline: 'Home, peace & bonds',
+    taglineTa: 'வீடு, அமைதி & பிணைப்புகள்',
+    taglineHi: 'घर, शांति और रिश्ते',
     avatar: require('@/assets/images/ai-chat/Gothic_woman_holding_family_symbol_202608170131.jpeg'),
     icon: 'home',
     report: [
@@ -113,22 +127,13 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     ],
   },
   {
-    id: 'love',
-    name: 'Love Expert',
-    tagline: 'Relationships & emotions',
-    avatar: require('@/assets/images/ai-chat/Woman_holding_glowing_mystical_h__202608170131.jpeg'),
-    icon: 'heart-half',
-    report: [
-      'Venus softens conflicts and opens hearts today.',
-      'Express feelings honestly for a deeper connection.',
-      'A romantic gesture will be warmly received.',
-      'Trust builds through small consistent acts of care.',
-    ],
-  },
-  {
     id: 'remedies',
     name: 'Remedies Guide',
+    nameTa: 'பரிகார வழிகாட்டி',
+    nameHi: 'उपाय गाइड',
     tagline: 'Mantras, gems & rituals',
+    taglineTa: 'மந்திரங்கள், ரத்தினங்கள் & சடங்குகள்',
+    taglineHi: 'मंत्र, रत्न और अनुष्ठान',
     avatar: require('@/assets/images/ai-chat/Gothic_AI_oracle_holding_book_202608170131.jpeg'),
     icon: 'diamond',
     report: [
@@ -141,4 +146,4 @@ export const AI_SPECIALISTS: AISpecialist[] = [
 ];
 
 export const getAISpecialist = (id: string) =>
-  AI_SPECIALISTS.find((s) => s.id === id) ?? AI_SPECIALISTS[0];
+  AI_SPECIALISTS.find((s) => s.id === id);

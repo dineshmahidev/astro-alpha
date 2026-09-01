@@ -79,7 +79,7 @@ export function KundliChart({ data }: { data: KundliChartData[] }) {
               x={cx}
               y={cy - 6}
               fontSize={11}
-              fill="#000000"
+              fill="#EEEDE0"
               fontWeight="bold"
               textAnchor="middle">
               {h.n}
@@ -98,7 +98,7 @@ export function KundliChart({ data }: { data: KundliChartData[] }) {
               x={cx}
               y={cy + 14}
               fontSize={11}
-              fill={h.n === 1 ? '#C9BE98' : '#333333'}
+              fill={h.n === 1 ? '#C9BE98' : '#D9CFC0'}
               fontWeight="600"
               textAnchor="middle">
               {row1}
@@ -117,7 +117,7 @@ export function KundliChart({ data }: { data: KundliChartData[] }) {
               x={cx}
               y={cy + 28}
               fontSize={11}
-              fill="#333333"
+              fill="#D9CFC0"
               fontWeight="600"
               textAnchor="middle">
               {row2}

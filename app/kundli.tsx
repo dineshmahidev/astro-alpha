@@ -1,207 +1,228 @@
 import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  TextInput,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { KundliChart, KundliChartData } from '@/components/kundli-chart';
-import { SouthIndianChart } from '@/components/south-indian-chart';
-import { EastIndianChart } from '@/components/east-indian-chart';
-
 const ACCENT = '#B09C66';
+const CARD_BG = '#F5F5F5';
+const BORDER = 'rgba(176,156,102,0.35)';
+const TEXT_DARK = '#1D1D1C';
+const TEXT_MID = '#555555';
 
-const CHART_STYLES = ['North', 'South', 'East'] as const;
+const RASHIS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+const NAKSHATRAS = ['Ashwini', 'Bharani', 'Krittika', 'Rohini', 'Mrigashira', 'Ardra', 'Punarvasu', 'Pushya', 'Ashlesha', 'Magha', 'Purva Phalguni', 'Uttara Phalguni', 'Hasta', 'Chitra', 'Swati', 'Vishakha', 'Anuradha', 'Jyeshtha', 'Mula', 'Purva Ashadha', 'Uttara Ashadha', 'Shravana', 'Dhanishta', 'Shatabhisha', 'Purva Bhadrapada', 'Uttara Bhadrapada', 'Revati'];
 
-const SAMPLE_CHART: KundliChartData[] = [
-  { n: 1, sign: 'Leo', planets: ['Lg', 'Su'] },
-  { n: 2, sign: 'Virgo', planets: [] },
-  { n: 3, sign: 'Libra', planets: ['Me'] },
-  { n: 4, sign: 'Scorpio', planets: ['Mo'] },
-  { n: 5, sign: 'Sagittarius', planets: ['Ma'] },
-  { n: 6, sign: 'Capricorn', planets: [] },
-  { n: 7, sign: 'Aquarius', planets: ['Ve'] },
-  { n: 8, sign: 'Pisces', planets: ['Sa', 'Ra'] },
-  { n: 9, sign: 'Aries', planets: ['Ju'] },
-  { n: 10, sign: 'Taurus', planets: [] },
-  { n: 11, sign: 'Gemini', planets: [] },
-  { n: 12, sign: 'Cancer', planets: ['Ke'] },
-];
-
-const DASHA = [
-  { planet: 'Sun', years: 6, age: '0 – 6' },
-  { planet: 'Moon', years: 10, age: '6 – 16' },
-  { planet: 'Mars', years: 7, age: '16 – 23' },
-  { planet: 'Rahu', years: 18, age: '23 – 41' },
-  { planet: 'Jupiter', years: 16, age: '41 – 57' },
-  { planet: 'Saturn', years: 19, age: '57 – 76' },
-  { planet: 'Mercury', years: 17, age: '76 – 93' },
-  { planet: 'Ketu', years: 7, age: '93 – 100' },
-  { planet: 'Venus', years: 20, age: '100 – 120' },
-];
-
-const REPORT = [
-  'Your Lagna (Ascendant) is Leo, making the Sun your first house lord. You are confident, warm and naturally take on leadership roles.',
-  'Moon in the 4th house brings a strong emotional bond with home and family, with a caring and intuitive nature.',
-  'Jupiter in the 9th house indicates strong fortune, wisdom and a deep interest in higher learning and spirituality.',
-  'Saturn with Rahu in the 8th house suggests deep transformation and a keen interest in research and the hidden sciences.',
-];
+type KundliData = {
+  name: string;
+  birthDate: string;
+  birthTime: string;
+  place: string;
+  rashi: string;
+  nakshatra: string;
+  lagna: string;
+  planets: { name: string; sign: string; house: number; degree: string }[];
+  houses: { num: number; sign: string; lord: string }[];
+};
 
 export default function KundliScreen() {
   const router = useRouter();
-  const [style, setStyle] = useState<(typeof CHART_STYLES)[number]>('North');
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [birthTime, setBirthTime] = useState('');
+  const [place, setPlace] = useState('');
+  const [kundli, setKundli] = useState<KundliData | null>(null);
+
+  const generate = () => {
+    if (!name) return;
+    const rashiIdx = Math.floor(Math.random() * 12);
+    const nakIdx = Math.floor(Math.random() * 27);
+    setKundli({
+      name,
+      birthDate: birthDate || '15/08/1990',
+      birthTime: birthTime || '10:30 AM',
+      place: place || 'Chennai',
+      rashi: RASHIS[rashiIdx],
+      nakshatra: NAKSHATRAS[nakIdx],
+      lagna: RASHIS[Math.floor(Math.random() * 12)],
+      planets: [
+        { name: 'Sun', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+        { name: 'Moon', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+        { name: 'Mars', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+        { name: 'Mercury', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+        { name: 'Jupiter', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+        { name: 'Venus', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+        { name: 'Saturn', sign: RASHIS[Math.floor(Math.random() * 12)], house: 1 + Math.floor(Math.random() * 12), degree: (Math.random() * 30).toFixed(1) + '°' },
+      ],
+      houses: Array.from({ length: 12 }, (_, i) => ({
+        num: i + 1,
+        sign: RASHIS[(rashiIdx + i) % 12],
+        lord: RASHIS[(rashiIdx + i) % 12],
+      })),
+    });
+  };
+
+  const reset = () => { setName(''); setBirthDate(''); setBirthTime(''); setPlace(''); setKundli(null); };
+
   return (
-    <ThemedView style={styles.screen}>
-      <SafeAreaView style={styles.safe} edges={['top']}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={24} color="#EEEDE0" />
-          </TouchableOpacity>
-          <ThemedText style={styles.title}>Kundli</ThemedText>
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-          <View style={styles.reportCard}>
-            <View style={styles.avatarRow}>
-              <Ionicons name="person-circle" size={44} color={ACCENT} />
-              <View>
-                <ThemedText style={styles.name}>Aarav Sharma</ThemedText>
-                <ThemedText style={styles.details}>15/08/1996 · 09:45 · Mumbai</ThemedText>
-              </View>
-            </View>
-            <View style={styles.statsRow}>
-              <View style={styles.stat}>
-                <ThemedText style={styles.statLabel}>Lagna</ThemedText>
-                <ThemedText style={styles.statValue}>Leo</ThemedText>
-              </View>
-              <View style={styles.stat}>
-                <ThemedText style={styles.statLabel}>Moon Sign</ThemedText>
-                <ThemedText style={styles.statValue}>Scorpio</ThemedText>
-              </View>
-              <View style={styles.stat}>
-                <ThemedText style={styles.statLabel}>Nakshatra</ThemedText>
-                <ThemedText style={styles.statValue}>Magha</ThemedText>
-              </View>
-            </View>
+    <View style={s.screen}>
+      <StatusBar style="dark" />
+      <SafeAreaView style={s.safe} edges={['top']}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
+
+          <View style={s.header}>
+            <TouchableOpacity style={s.backBtn} onPress={() => router.back()}>
+              <Ionicons name="chevron-back" size={22} color={TEXT_DARK} />
+            </TouchableOpacity>
+            <Text style={s.headerTitle}>Kundli Analysis</Text>
+            <View style={{ width: 40 }} />
           </View>
 
-          <SectionTitle icon="grid-outline" text="Kundli Chart" />
-          <View style={styles.switcher}>
-            {CHART_STYLES.map((s) => (
-              <TouchableOpacity
-                key={s}
-                style={[styles.switchBtn, style === s && styles.switchBtnActive]}
-                onPress={() => setStyle(s)}>
-                <ThemedText
-                  style={[styles.switchText, style === s && styles.switchTextActive]}>
-                  {s} Indian
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-          </View>
-          <View style={styles.card}>
-            {style === 'North' && <KundliChart data={SAMPLE_CHART} />}
-            {style === 'South' && <SouthIndianChart data={SAMPLE_CHART} />}
-            {style === 'East' && <EastIndianChart data={SAMPLE_CHART} />}
-            <ThemedText style={styles.legend}>
-              Lg: Lagna · Su: Sun · Mo: Moon · Ma: Mars · Me: Mercury · Ju: Jupiter · Ve: Venus ·
-              Sa: Saturn · Ra: Rahu · Ke: Ketu
-            </ThemedText>
-          </View>
-
-          <SectionTitle icon="time-outline" text="Mahadasha (Vimshottari)" />
-          <View style={styles.card}>
-            {DASHA.map((d, i) => (
-              <View key={d.planet} style={styles.dashaRow}>
-                <View style={styles.dashaLeft}>
-                  <View style={styles.dashaDot} />
-                  <View>
-                    <ThemedText style={styles.dashaPlanet}>{d.planet}</ThemedText>
-                    <ThemedText style={styles.dashaAge}>{d.age} years</ThemedText>
-                  </View>
+          {!kundli ? (
+            <View style={s.formSection}>
+              <View style={s.inputCard}>
+                <View style={s.inputRow}>
+                  <Ionicons name="person" size={18} color={ACCENT} />
+                  <TextInput style={s.input} placeholder="Full Name" placeholderTextColor="#AAAAAA" value={name} onChangeText={setName} />
                 </View>
-                <ThemedText style={styles.dashaYears}>{d.years} yrs</ThemedText>
+                <View style={s.divider} />
+                <View style={s.inputRow}>
+                  <Ionicons name="calendar" size={18} color={ACCENT} />
+                  <TextInput style={s.input} placeholder="Birth Date (DD/MM/YYYY)" placeholderTextColor="#AAAAAA" value={birthDate} onChangeText={setBirthDate} />
+                </View>
+                <View style={s.divider} />
+                <View style={s.inputRow}>
+                  <Ionicons name="time" size={18} color={ACCENT} />
+                  <TextInput style={s.input} placeholder="Birth Time (HH:MM)" placeholderTextColor="#AAAAAA" value={birthTime} onChangeText={setBirthTime} />
+                </View>
+                <View style={s.divider} />
+                <View style={s.inputRow}>
+                  <Ionicons name="location" size={18} color={ACCENT} />
+                  <TextInput style={s.input} placeholder="Birth Place" placeholderTextColor="#AAAAAA" value={place} onChangeText={setPlace} />
+                </View>
               </View>
-            ))}
-          </View>
+              <TouchableOpacity style={s.genBtn} onPress={generate}>
+                <Ionicons name="document-text" size={18} color="#fff" />
+                <Text style={s.genBtnTxt}>Generate Kundli</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={s.resultSection}>
+              {/* Basic Info */}
+              <View style={s.infoCard}>
+                <Text style={s.infoName}>{kundli.name}</Text>
+                <Text style={s.infoSub}>{kundli.birthDate} · {kundli.birthTime} · {kundli.place}</Text>
+                <View style={s.infoChips}>
+                  <View style={s.chip}><Text style={s.chipLabel}>Rashi</Text><Text style={s.chipValue}>{kundli.rashi}</Text></View>
+                  <View style={s.chip}><Text style={s.chipLabel}>Nakshatra</Text><Text style={s.chipValue}>{kundli.nakshatra}</Text></View>
+                  <View style={s.chip}><Text style={s.chipLabel}>Lagna</Text><Text style={s.chipValue}>{kundli.lagna}</Text></View>
+                </View>
+              </View>
 
-          <SectionTitle icon="document-text-outline" text="Kundli Report" />
-          <View style={styles.card}>
-            {REPORT.map((r, i) => (
-              <View key={i} style={styles.reportRow}>
-                <Ionicons name="sparkles" size={16} color={ACCENT} />
-                <ThemedText style={styles.reportText}>{r}</ThemedText>
+              {/* Planets */}
+              <Text style={s.sectionTitle}>Planetary Positions</Text>
+              <View style={s.tableHeader}>
+                <Text style={[s.tableHead, { flex: 1.2 }]}>Planet</Text>
+                <Text style={[s.tableHead, { flex: 1.5 }]}>Sign</Text>
+                <Text style={[s.tableHead, { flex: 0.8 }]}>House</Text>
+                <Text style={[s.tableHead, { flex: 1, textAlign: 'right' }]}>Degree</Text>
               </View>
-            ))}
-          </View>
+              {kundli.planets.map((p, i) => (
+                <View key={i} style={[s.tableRow, i % 2 === 0 && s.tableRowAlt]}>
+                  <Text style={[s.tableCell, { flex: 1.2, fontWeight: '600' }]}>{p.name}</Text>
+                  <Text style={[s.tableCell, { flex: 1.5 }]}>{p.sign}</Text>
+                  <Text style={[s.tableCell, { flex: 0.8 }]}>{p.house}</Text>
+                  <Text style={[s.tableCell, { flex: 1, textAlign: 'right' }]}>{p.degree}</Text>
+                </View>
+              ))}
+
+              {/* Houses */}
+              <Text style={s.sectionTitle}>Bhava Chart</Text>
+              <View style={s.housesGrid}>
+                {kundli.houses.map((h) => (
+                  <View key={h.num} style={s.houseCard}>
+                    <Text style={s.houseNum}>{h.num}</Text>
+                    <Text style={s.houseSign}>{h.sign}</Text>
+                  </View>
+                ))}
+              </View>
+
+              <TouchableOpacity style={s.resetBtn} onPress={reset}>
+                <Text style={s.resetBtnTxt}>Generate New</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <View style={{ height: 40 }} />
         </ScrollView>
       </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-function SectionTitle({ icon, text }: { icon: any; text: string }) {
-  return (
-    <View style={styles.sectionTitleRow}>
-      <Ionicons name={icon} size={18} color={ACCENT} />
-      <ThemedText style={styles.sectionTitle}>{text}</ThemedText>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#121212' },
+const s = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: '#FFFFFF' },
   safe: { flex: 1 },
+  scroll: { paddingBottom: 40 },
+
   header: {
-    height: 56,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 16, paddingTop: 8, paddingBottom: 16,
   },
-  backBtn: { padding: 8 },
-  title: { fontSize: 20, fontWeight: 'bold', color: '#EEEDE0', marginLeft: 4 },
-  content: { padding: 16, paddingBottom: 40 },
-  reportCard: { backgroundColor: '#1D1D1C', borderRadius: 14, padding: 16, marginBottom: 20 },
-  avatarRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  name: { fontSize: 18, fontWeight: 'bold', color: '#EEEDE0' },
-  details: { fontSize: 13, color: '#7E7E78', marginTop: 2 },
-  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 },
-  stat: { flex: 1, alignItems: 'center' },
-  statLabel: { fontSize: 12, color: '#7E7E78' },
-  statValue: { fontSize: 16, fontWeight: 'bold', color: '#EEEDE0', marginTop: 2 },
-  sectionTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10, marginTop: 6 },
-  sectionTitle: { fontSize: 17, fontWeight: 'bold', color: '#EEEDE0' },
-  switcher: {
-    flexDirection: 'row',
-    backgroundColor: '#1D1D1C',
-    borderRadius: 12,
-    padding: 4,
-    marginBottom: 10,
+  backBtn: {
+    width: 40, height: 40, borderRadius: 12,
+    backgroundColor: CARD_BG, alignItems: 'center', justifyContent: 'center',
   },
-  switchBtn: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 9,
+  headerTitle: { fontSize: 18, fontWeight: 'bold', color: TEXT_DARK },
+
+  formSection: { paddingHorizontal: 16 },
+  inputCard: { backgroundColor: CARD_BG, borderRadius: 14, borderWidth: 1, borderColor: BORDER },
+  inputRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 12 },
+  input: { flex: 1, fontSize: 14, color: TEXT_DARK },
+  divider: { height: 1, backgroundColor: '#E8E8E8', marginHorizontal: 14 },
+  genBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    marginTop: 16, backgroundColor: ACCENT, borderRadius: 14, paddingVertical: 16,
   },
-  switchBtnActive: { backgroundColor: ACCENT },
-  switchText: { fontSize: 13, color: '#7E7E78', fontWeight: '600' },
-  switchTextActive: { color: '#ffffff' },
-  card: { backgroundColor: '#1D1D1C', borderRadius: 14, padding: 16, marginBottom: 20 },
-  legend: { fontSize: 11, color: '#7E7E78', textAlign: 'center', marginTop: 10, lineHeight: 16 },
-  dashaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#444039',
+  genBtnTxt: { fontSize: 15, fontWeight: '700', color: '#FFFFFF' },
+
+  resultSection: { paddingHorizontal: 16 },
+  infoCard: {
+    backgroundColor: CARD_BG, borderRadius: 16, padding: 16, borderWidth: 1, borderColor: BORDER, marginBottom: 16,
   },
-  dashaLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  dashaDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: ACCENT },
-  dashaPlanet: { fontSize: 15, fontWeight: '600', color: '#EEEDE0' },
-  dashaAge: { fontSize: 12, color: '#7E7E78', marginTop: 1 },
-  dashaYears: { fontSize: 15, fontWeight: 'bold', color: ACCENT },
-  reportRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
-  reportText: { flex: 1, fontSize: 14, color: '#7E7E78', lineHeight: 20 },
+  infoName: { fontSize: 18, fontWeight: 'bold', color: TEXT_DARK },
+  infoSub: { fontSize: 12, color: TEXT_MID, marginTop: 4 },
+  infoChips: { flexDirection: 'row', gap: 8, marginTop: 12 },
+  chip: { flex: 1, backgroundColor: '#FFFFFF', borderRadius: 10, padding: 10, alignItems: 'center', borderWidth: 1, borderColor: BORDER },
+  chipLabel: { fontSize: 10, color: TEXT_MID },
+  chipValue: { fontSize: 13, fontWeight: '600', color: ACCENT, marginTop: 2 },
+
+  sectionTitle: { fontSize: 14, fontWeight: '600', color: TEXT_DARK, marginBottom: 10 },
+  tableHeader: { flexDirection: 'row', paddingHorizontal: 12, paddingVertical: 8, backgroundColor: '#F0EDE4', borderRadius: 8, marginBottom: 4 },
+  tableHead: { fontSize: 11, fontWeight: '700', color: TEXT_MID },
+  tableRow: { flexDirection: 'row', paddingHorizontal: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
+  tableRowAlt: { backgroundColor: '#FAFAFA' },
+  tableCell: { fontSize: 12, color: TEXT_DARK },
+
+  housesGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  houseCard: {
+    width: '30%', backgroundColor: CARD_BG, borderRadius: 12, padding: 12,
+    alignItems: 'center', borderWidth: 1, borderColor: BORDER,
+  },
+  houseNum: { fontSize: 11, color: TEXT_MID },
+  houseSign: { fontSize: 13, fontWeight: '600', color: ACCENT, marginTop: 4 },
+
+  resetBtn: {
+    marginTop: 20, backgroundColor: CARD_BG, borderRadius: 14,
+    paddingVertical: 14, alignItems: 'center', borderWidth: 1, borderColor: BORDER,
+  },
+  resetBtnTxt: { fontSize: 14, fontWeight: '600', color: ACCENT },
 });
