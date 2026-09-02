@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { Image, ImageBackground } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
@@ -25,7 +26,7 @@ const TEXT_MID = '#555555';
 const TEXT_DIM = '#999999';
 const GREEN = '#7BD88F';
 
-const FILTERS = ['All', 'Vedic', 'Tarot', 'Numerology', 'Palmistry', 'Vastu'];
+const FILTERS = ['All', 'Vedic', 'Tarot', 'Palm Reading'];
 const SESSION_FILTERS = ['All', 'Active', 'Completed'];
 
 export default function AstrologerMarketScreen() {
@@ -80,6 +81,22 @@ export default function AstrologerMarketScreen() {
           <TouchableOpacity style={s.filterBtn} onPress={() => setShowFilter(true)}>
             <Ionicons name="options-outline" size={20} color={TEXT_DARK} />
           </TouchableOpacity>
+        </View>
+
+        {/* Banner */}
+        <View style={s.bannerWrap}>
+          <ImageBackground
+            source={require('../assets/astrologer-eranings.png')}
+            style={s.banner}
+            imageStyle={s.bannerImage}
+            resizeMode="cover"
+          >
+            <View style={s.bannerOverlay}>
+              <Image source={require('../assets/Koshmira_text.png')} style={s.bannerLogo} contentFit="contain" />
+              <Text style={s.bannerTitle}>Astrologers</Text>
+              <Text style={s.bannerSub}>Connect with verified Vedic astrologers</Text>
+            </View>
+          </ImageBackground>
         </View>
 
         {/* Tabs */}
@@ -264,6 +281,14 @@ const s = StyleSheet.create({
   backBtn: { width: 36, height: 36, borderRadius: 10, backgroundColor: CARD_BG, alignItems: 'center', justifyContent: 'center' },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: TEXT_DARK },
   filterBtn: { width: 36, height: 36, borderRadius: 10, backgroundColor: CARD_BG, alignItems: 'center', justifyContent: 'center' },
+
+  bannerWrap: { marginHorizontal: 16, marginBottom: 12 },
+  banner: { borderRadius: 14, overflow: 'hidden', minHeight: 140 },
+  bannerImage: { borderRadius: 14 },
+  bannerOverlay: { flex: 1, justifyContent: 'flex-end', paddingHorizontal: 20, paddingBottom: 16 },
+  bannerLogo: { width: 100, height: 24, marginBottom: 6 },
+  bannerTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' },
+  bannerSub: { fontSize: 12, color: ACCENT, marginTop: 4 },
 
   // Tabs
   tabRow: { flexDirection: 'row', paddingHorizontal: 16, gap: 8, borderBottomWidth: 0.5, borderBottomColor: '#E8E8E8' },

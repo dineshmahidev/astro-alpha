@@ -210,12 +210,30 @@ export default function OnboardingScreen() {
   };
 
   const saveAndGo = async () => {
+    console.log('[Onboarding] saveAndGo started');
+    console.log('[Onboarding] name:', name.trim());
+    console.log('[Onboarding] gender:', gender);
+    console.log('[Onboarding] dob:', dob);
+    console.log('[Onboarding] tob:', tob);
+    console.log('[Onboarding] place:', place);
+    console.log('[Onboarding] dobDate:', dobDate);
+    console.log('[Onboarding] tobH24:', tobH24, 'tobMin:', tobMin);
+
     await AsyncStorage.setItem('onboarding_done', 'true');
     await AsyncStorage.setItem('onboarding_data', JSON.stringify({ name: name.trim(), gender, dob, tob, place }));
+    console.log('[Onboarding] AsyncStorage saved');
+
     const fullDate = new Date(dobDate.getFullYear(), dobDate.getMonth(), dobDate.getDate(), tobH24, tobMin);
     const tobDate = new Date(1995, 0, 1, tobH24, tobMin);
-    // Save to auth context so match-result and other screens can use it
-    await saveBirthDetails({
+    console.log('[Onboarding] fullDate:', fullDate);
+    console.log('[Onboarding] tobDate:', tobDate);
+
+    // Compute rasi/nakshatra from vedic chart
+    console.log('[Onboarding] computing vedic chart...');
+    const chart = computeVedicChart(fullDate);
+    console.log('[Onboarding] chart result:', JSON.stringify(chart));
+
+    const details = {
       name: name.trim(),
       gender: gender as 'male' | 'female' | 'other',
       dob,
@@ -224,10 +242,20 @@ export default function OnboardingScreen() {
       tobDate,
       tobKnown: true,
       place,
-    });
-    const chart = computeVedicChart(fullDate);
+      rasi: chart.rashi,
+      nakshatra: chart.nakshatra,
+    };
+    console.log('[Onboarding] saving details:', JSON.stringify(details, null, 2));
+
+    // Save to auth context so match-result and other screens can use it
+    await saveBirthDetails(details);
+    console.log('[Onboarding] saveBirthDetails completed');
+    console.log('[Onboarding] rasi saved:', chart.rashi);
+    console.log('[Onboarding] nakshatra saved:', chart.nakshatra);
+
     setVedicChart(chart);
     setShowResult(true);
+    console.log('[Onboarding] showResult set to true');
   };
 
   const { role, saveBirthDetails } = useAuth();

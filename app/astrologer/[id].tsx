@@ -1,12 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, ImageBackground, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { Avatar } from '@/components/avatar';
 import { VectorAvatar } from '@/components/vector-avatar';
 import type { Astrologer } from '@/constants/astrologers';
@@ -19,7 +16,10 @@ const ACCENT = '#B09C66';
 const GREEN = '#7BD88F';
 const CHAT_PRICE = 50;
 const CALL_PRICE = 100;
-const BACKGROUND_IMAGE = require('@/assets/images/background.png');
+const CARD_BG = 'rgba(245,245,245,1)';
+const BORDER = 'rgba(176,156,102,0.35)';
+const TEXT_DARK = '#1D1D1C';
+const TEXT_MID = '#555555';
 
 type Review = { id: string; name: string; rating: number; text: string; date: string };
 
@@ -141,14 +141,13 @@ export default function AstrologerPortfolioScreen() {
     ));
 
   return (
-    <ThemedView style={styles.screen}>
-      <ImageBackground source={BACKGROUND_IMAGE} style={StyleSheet.absoluteFill} imageStyle={styles.bgImg} />
+    <View style={styles.screen}>
       <SafeAreaView style={styles.safe} edges={['top']}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={24} color="#EEEDE0" />
+            <Ionicons name="chevron-back" size={24} color={TEXT_DARK} />
           </TouchableOpacity>
-          <ThemedText style={styles.headerTitle}>Profile</ThemedText>
+          <Text style={styles.headerTitle}>Profile</Text>
         </View>
 
         <ScrollView
@@ -156,21 +155,21 @@ export default function AstrologerPortfolioScreen() {
           contentContainerStyle={[styles.content, { paddingBottom: 140 + insets.bottom }]}>
           <View style={styles.hero}>
             <Avatar uri={astro?.avatar} name={astro?.name ?? 'A'} size={100} color={astro?.avatarColor} style={{ borderWidth: 3, borderColor: ACCENT }} />
-            <ThemedText style={styles.name}>{astro?.name}</ThemedText>
+            <Text style={styles.name}>{astro?.name}</Text>
             <View style={styles.ratingRow}>
               <Ionicons name="star" size={16} color="#FFB800" />
-              <ThemedText style={styles.rating}>{astro?.rating} Rating</ThemedText>
-              <ThemedText style={styles.reviewCount}>({reviews.length} reviews)</ThemedText>
+              <Text style={styles.rating}>{astro?.rating} Rating</Text>
+              <Text style={styles.reviewCount}>({reviews.length} reviews)</Text>
             </View>
-            <ThemedText style={styles.specialty}>{astro?.specialty}</ThemedText>
+            <Text style={styles.specialty}>{astro?.specialty}</Text>
             <View style={styles.metaRow}>
               <View style={styles.metaItem}>
                 <Ionicons name="location" size={15} color={ACCENT} />
-                <ThemedText style={styles.metaText}>{astro?.location}</ThemedText>
+                <Text style={styles.metaText}>{astro?.location}</Text>
               </View>
               <View style={styles.metaItem}>
                 <Ionicons name="briefcase" size={15} color={ACCENT} />
-                <ThemedText style={styles.metaText}>{astro?.experience}</ThemedText>
+                <Text style={styles.metaText}>{astro?.experience}</Text>
               </View>
             </View>
           </View>
@@ -178,10 +177,10 @@ export default function AstrologerPortfolioScreen() {
           {/* ── TABS ── */}
           <View style={styles.tabRow}>
             <TouchableOpacity style={[styles.tab, activeTab === 'about' && styles.tabActive]} onPress={() => setActiveTab('about')}>
-              <ThemedText style={[styles.tabTxt, activeTab === 'about' && styles.tabTxtActive]}>About</ThemedText>
+              <Text style={[styles.tabTxt, activeTab === 'about' && styles.tabTxtActive]}>About</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.tab, activeTab === 'reviews' && styles.tabActive]} onPress={() => setActiveTab('reviews')}>
-              <ThemedText style={[styles.tabTxt, activeTab === 'reviews' && styles.tabTxtActive]}>Reviews ({reviews.length})</ThemedText>
+              <Text style={[styles.tabTxt, activeTab === 'reviews' && styles.tabTxtActive]}>Reviews ({reviews.length})</Text>
             </TouchableOpacity>
           </View>
 
@@ -189,48 +188,48 @@ export default function AstrologerPortfolioScreen() {
           {activeTab === 'about' && (
             <>
               <View style={styles.section}>
-                <ThemedText style={styles.sectionTitle}>About</ThemedText>
-                <ThemedText style={styles.bio}>{astro?.bio}</ThemedText>
+                <Text style={styles.sectionTitle}>About</Text>
+                <Text style={styles.bio}>{astro?.bio}</Text>
               </View>
 
               {/* Quick Stats */}
               <View style={styles.statsRow}>
                 <View style={styles.statItem}>
                   <Ionicons name="star" size={18} color="#FFB800" />
-                  <ThemedText style={styles.statValue}>{astro?.rating}</ThemedText>
-                  <ThemedText style={styles.statLabel}>Rating</ThemedText>
+                  <Text style={styles.statValue}>{astro?.rating}</Text>
+                  <Text style={styles.statLabel}>Rating</Text>
                 </View>
                 <View style={styles.statDivider} />
                 <View style={styles.statItem}>
                   <Ionicons name="briefcase" size={18} color={ACCENT} />
-                  <ThemedText style={styles.statValue}>{astro?.experience}</ThemedText>
-                  <ThemedText style={styles.statLabel}>Experience</ThemedText>
+                  <Text style={styles.statValue}>{astro?.experience}</Text>
+                  <Text style={styles.statLabel}>Experience</Text>
                 </View>
                 <View style={styles.statDivider} />
                 <View style={styles.statItem}>
                   <Ionicons name="chatbubbles" size={18} color={GREEN} />
-                  <ThemedText style={styles.statValue}>{reviews.length * 12}+</ThemedText>
-                  <ThemedText style={styles.statLabel}>Consultations</ThemedText>
+                  <Text style={styles.statValue}>{reviews.length * 12}+</Text>
+                  <Text style={styles.statLabel}>Consultations</Text>
                 </View>
               </View>
 
               <View style={styles.section}>
-                <ThemedText style={styles.sectionTitle}>Services</ThemedText>
+                <Text style={styles.sectionTitle}>Services</Text>
                 <View style={styles.chips}>
                   {astro?.specialty.split(', ').map((s) => (
                     <View key={s} style={styles.chip}>
-                      <ThemedText style={styles.chipText}>{s}</ThemedText>
+                      <Text style={styles.chipText}>{s}</Text>
                     </View>
                   ))}
                 </View>
               </View>
 
               <View style={styles.section}>
-                <ThemedText style={styles.sectionTitle}>Languages</ThemedText>
+                <Text style={styles.sectionTitle}>Languages</Text>
                 <View style={styles.chips}>
                   {['English', 'Tamil', 'Hindi'].map((lang) => (
                     <View key={lang} style={styles.chip}>
-                      <ThemedText style={styles.chipText}>{lang}</ThemedText>
+                      <Text style={styles.chipText}>{lang}</Text>
                     </View>
                   ))}
                 </View>
@@ -246,12 +245,12 @@ export default function AstrologerPortfolioScreen() {
                   <View style={styles.reviewTop}>
                     <VectorAvatar name={r.name} size={38} />
                     <View style={{ flex: 1 }}>
-                      <ThemedText style={styles.reviewName}>{r.name}</ThemedText>
+                      <Text style={styles.reviewName}>{r.name}</Text>
                       <View style={styles.reviewStars}>{renderStars(r.rating)}</View>
                     </View>
-                    <ThemedText style={styles.reviewDate}>{r.date}</ThemedText>
+                    <Text style={styles.reviewDate}>{r.date}</Text>
                   </View>
-                  <ThemedText style={styles.reviewText}>{r.text}</ThemedText>
+                  <Text style={styles.reviewText}>{r.text}</Text>
                 </View>
               ))}
             </View>
@@ -260,94 +259,93 @@ export default function AstrologerPortfolioScreen() {
 
         <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 8 }]}>
           <View style={styles.pricingRow}>
-            <ThemedText style={styles.pricingText}>₹{CHAT_PRICE}/chat session</ThemedText>
-            <ThemedText style={styles.pricingText}>₹{CALL_PRICE}/min for calls</ThemedText>
+            <Text style={styles.pricingText}>₹{CHAT_PRICE}/chat session</Text>
+            <Text style={styles.pricingText}>₹{CALL_PRICE}/min for calls</Text>
           </View>
           <View style={styles.buttonRow}>
             <TouchableOpacity style={[styles.btn, styles.chatBtn]} disabled={paying} onPress={startPaidChat}>
               <Ionicons name="chatbubble" size={18} color="#ffffff" />
-              <ThemedText style={styles.btnText}>{paying ? 'Starting…' : t('home.chat')}</ThemedText>
+              <Text style={styles.btnText}>{paying ? 'Starting…' : t('home.chat')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.btn, styles.callBtn]} onPress={paidCall}>
               <Ionicons name="call" size={18} color="#ffffff" />
-              <ThemedText style={styles.btnText}>Call</ThemedText>
+              <Text style={styles.btnText}>Call</Text>
             </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#121212' },
-  bgImg: { resizeMode: 'cover', opacity: 0.5 },
+  screen: { flex: 1, backgroundColor: '#FFFFFF' },
   safe: { flex: 1 },
   header: { height: 56, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
   backBtn: { padding: 8 },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#EEEDE0', marginLeft: 4 },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', color: TEXT_DARK, marginLeft: 4 },
   content: { padding: 16 },
   hero: { alignItems: 'center', paddingVertical: 14 },
-  heroAvatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#1D1D1C', borderWidth: 3, borderColor: ACCENT },
-  name: { fontSize: 21, fontWeight: 'bold', color: '#EEEDE0', marginTop: 10 },
+  heroAvatar: { width: 100, height: 100, borderRadius: 50, backgroundColor: CARD_BG, borderWidth: 3, borderColor: ACCENT },
+  name: { fontSize: 21, fontWeight: 'bold', color: TEXT_DARK, marginTop: 10 },
   ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
-  rating: { fontSize: 14, color: '#7E7E78' },
-  reviewCount: { fontSize: 12, color: '#555' },
+  rating: { fontSize: 14, color: TEXT_MID },
+  reviewCount: { fontSize: 12, color: TEXT_MID },
   specialty: { fontSize: 13, color: ACCENT, marginTop: 4 },
   metaRow: { flexDirection: 'row', gap: 18, marginTop: 10 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  metaText: { fontSize: 12.5, color: '#7E7E78' },
+  metaText: { fontSize: 12.5, color: TEXT_MID },
 
   /* tabs */
   tabRow: { flexDirection: 'row', marginTop: 18, gap: 8 },
-  tab: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: '#1D1D1C' },
-  tabActive: { backgroundColor: ACCENT },
-  tabTxt: { fontSize: 14, fontWeight: '600', color: '#7E7E78' },
+  tab: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10, backgroundColor: CARD_BG, borderWidth: 1, borderColor: BORDER },
+  tabActive: { backgroundColor: ACCENT, borderColor: ACCENT },
+  tabTxt: { fontSize: 14, fontWeight: '600', color: TEXT_MID },
   tabTxtActive: { color: '#fff' },
 
   section: { marginTop: 18 },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#EEEDE0', marginBottom: 8 },
-  bio: { fontSize: 13.5, color: '#7E7E78', lineHeight: 21 },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: TEXT_DARK, marginBottom: 8 },
+  bio: { fontSize: 13.5, color: TEXT_MID, lineHeight: 21 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 7 },
-  chip: { backgroundColor: '#292723', borderRadius: 12, paddingVertical: 5, paddingHorizontal: 12 },
-  chipText: { fontSize: 12.5, color: '#EEEDE0' },
+  chip: { backgroundColor: CARD_BG, borderRadius: 12, paddingVertical: 5, paddingHorizontal: 12, borderWidth: 1, borderColor: BORDER },
+  chipText: { fontSize: 12.5, color: TEXT_DARK },
 
   statsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1D1D1C',
+    backgroundColor: CARD_BG,
     borderRadius: 14,
     padding: 14,
     marginTop: 14,
     borderWidth: 1,
-    borderColor: 'rgba(176,156,102,0.25)',
+    borderColor: BORDER,
   },
   statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statValue: { fontSize: 14, fontWeight: 'bold', color: '#EEEDE0' },
-  statLabel: { fontSize: 11, color: '#7E7E78' },
-  statDivider: { width: 1, height: 30, backgroundColor: 'rgba(176,156,102,0.2)' },
+  statValue: { fontSize: 14, fontWeight: 'bold', color: TEXT_DARK },
+  statLabel: { fontSize: 11, color: TEXT_MID },
+  statDivider: { width: 1, height: 30, backgroundColor: BORDER },
 
   /* reviews */
-  reviewCard: { backgroundColor: '#1D1D1C', borderRadius: 12, padding: 12, marginBottom: 10 },
+  reviewCard: { backgroundColor: CARD_BG, borderRadius: 12, padding: 12, marginBottom: 10, borderWidth: 1, borderColor: BORDER },
   reviewTop: { flexDirection: 'row', alignItems: 'center', gap: 9, marginBottom: 8 },
   reviewAvatar: { width: 32, height: 32, borderRadius: 16, backgroundColor: ACCENT, alignItems: 'center', justifyContent: 'center' },
   reviewAvatarTxt: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
-  reviewName: { fontSize: 13, fontWeight: '600', color: '#EEEDE0' },
+  reviewName: { fontSize: 13, fontWeight: '600', color: TEXT_DARK },
   reviewStars: { flexDirection: 'row', gap: 1, marginTop: 1 },
-  reviewDate: { fontSize: 11, color: '#555' },
-  reviewText: { fontSize: 13, color: '#7E7E78', lineHeight: 19 },
+  reviewDate: { fontSize: 11, color: TEXT_MID },
+  reviewText: { fontSize: 13, color: TEXT_MID, lineHeight: 19 },
 
   /* bottom bar */
   bottomBar: {
     position: 'absolute', left: 0, right: 0, bottom: 0,
     gap: 8, padding: 16, paddingTop: 12,
-    backgroundColor: '#1D1D1C', borderTopWidth: 1, borderTopColor: '#444039',
+    backgroundColor: '#FFFFFF', borderTopWidth: 1, borderTopColor: BORDER,
   },
   pricingRow: { flexDirection: 'row', justifyContent: 'center', gap: 16 },
-  pricingText: { fontSize: 12, color: '#7E7E78' },
+  pricingText: { fontSize: 12, color: TEXT_MID },
   buttonRow: { flexDirection: 'row', gap: 12 },
   btn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, borderRadius: 12, paddingVertical: 13 },
-  chatBtn: { backgroundColor: '#292723' },
+  chatBtn: { backgroundColor: CARD_BG, borderWidth: 1, borderColor: BORDER },
   callBtn: { backgroundColor: ACCENT },
   btnText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
 });

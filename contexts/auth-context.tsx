@@ -238,8 +238,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         tobDate,
         tobKnown: !!data.tob_known,
         place: data.place ?? '',
-        rashi: data.tob_known ? undefined : (data.rashi ?? undefined),
-        nakshatra: data.tob_known ? undefined : (data.nakshatra ?? undefined),
+        rashi: data.rashi ?? undefined,
+        nakshatra: data.nakshatra ?? undefined,
       };
       setBirthDetails(details);
       await AsyncStorage.setItem(STORAGE_KEYS.birthDetails, JSON.stringify(details));
@@ -315,8 +315,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           tob: details.tobKnown ? details.tob : null,
           tob_known: details.tobKnown,
           place: details.place.trim(),
-          rashi: details.tobKnown ? null : details.rashi ?? null,
-          nakshatra: details.tobKnown ? null : details.nakshatra ?? null,
+          rashi: details.rashi ?? null,
+          nakshatra: details.nakshatra ?? null,
         } as never);
         if (error) console.error('[Auth] sync birth details to backend failed', error.message);
         else console.log('[Auth] birth details synced to backend:', user.email);

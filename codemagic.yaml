@@ -1,12 +1,5 @@
-# Codemagic workflow for MypracticalApp (Expo SDK 54 + native modules)
-# Builds a DEBUG APK (with expo-dev-client Dev Launcher) signed with the SAME
-# keystore used for release, so the SHA-1 registered in Firebase works on
-# debug and release builds.
-#
-# The Dev Launcher lets the phone connect to Metro over WiFi (LAN IP) —
-# no USB/adb reverse needed. On the phone: open the app, tap "Enter URL
-# manually", type http://<PC-LAN-IP>:8081 (or scan the exp:// QR from
-# `npx expo start`). Phone and PC must be on the same network.
+# Codemagic workflow for Koshmira (Expo SDK 54 + native modules)
+# Builds DEBUG APK + AAB with auto-incrementing version code.
 #
 # Env group `android_signing` must contain:
 #   CM_KEYSTORE             base64 of my-upload-key.jks
@@ -14,13 +7,20 @@
 #   CM_KEY_ALIAS            key alias
 #   CM_KEY_PASSWORD         key password
 # Env group `firebase` must contain:
-#   GOOGLE_SERVICES_JSON    base64 of google-services.json (Android, pkg throneapp.myastro.app)
-#   GOOGLE_SERVICE_INFO     base64 of GoogleService-Info.plist (iOS, optional for Android)
+#   GOOGLE_SERVICES_JSON    base64 of google-services.json
 
 workflows:
-  react-native-expo-android:
-    name: React Native Expo Android
+  koshmira-android:
+    name: Koshmira Android (Debug + AAB)
     max_build_duration: 120
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+        - pattern: develop
+          include: true
     environment:
       groups:
         - android_signing
@@ -29,44 +29,52 @@ workflows:
       - name: Install dependencies
         script: |
           npm install --legacy-peer-deps
-      - name: Decode Firebase config files
+
+      - name: Decode Firebase config
         script: |
           echo "$GOOGLE_SERVICES_JSON" | base64 --decode > google-services.json
-          if [ -n "$GOOGLE_SERVICE_INFO" ]; then
-            echo "$GOOGLE_SERVICE_INFO" | base64 --decode > GoogleService-Info.plist
-          fi
           ls -la google-services.json
+
+      - name: Auto-increment version code
+        script: |
+          # Read current versionCode from app.json android.versionCode
+          CURRENT=$(node -p "require('./app.json').expo.android.versionCode || 1")
+          NEW=$((CURRENT + 1))
+          echo "Version code: $CURRENT -> $NEW"
+
+          # Update app.json
+          node -e "
+            const fs = require('fs');
+            const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+            app.expo.android.versionCode = $NEW;
+            fs.writeFileSync('app.json', JSON.stringify(app, null, 2) + '\n');
+          "
+
+          # Also update build.gradle if prebuild already ran
+          if [ -f android/app/build.gradle ]; then
+            sed -i "s/versionCode [0-9]*/versionCode $NEW/" android/app/build.gradle
+          fi
+
+          echo "VERSION_CODE=$NEW" >> $CM_ENV
+          git config --global user.name "Codemagic"
+          git config --global user.email "ci@codemagic.io"
+          git add app.json
+          git diff --cached --quiet || git commit -m "chore: bump version code to $NEW [skip ci]"
+          git push origin HEAD || true
+
       - name: Generate native Android project
         script: |
           npx expo prebuild --platform android --clean
-      - name: Configure Jitsi Gradle requirements
-        script: |
-          # Jitsi SDK requires gradlePluginVersion in root ext (Expo SDK 54 uses AGP 8.5.0)
-          node -e "
-            const fs = require('fs');
-            const f = 'android/build.gradle';
-            let c = fs.readFileSync(f, 'utf8');
-            if (!c.includes('gradlePluginVersion')) {
-              if (c.includes('ext {')) {
-                c = c.replace(/ext\s*\{/, 'ext {\n    gradlePluginVersion = \"8.5.0\"');
-              } else {
-                c = 'ext { gradlePluginVersion = \"8.5.0\" }\n\n' + c;
-              }
-              fs.writeFileSync(f, c);
-              console.log('gradlePluginVersion added');
-            } else {
-              console.log('gradlePluginVersion already present');
-            }
-          "
-      - name: Configure signing (debug + release use the same keystore)
+
+      - name: Configure signing (debug + release same keystore)
         script: |
           echo "$CM_KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
-          # release signing properties (Expo native support)
           echo "MYAPP_UPLOAD_STORE_FILE=upload-keystore.jks" >> android/gradle.properties
           echo "MYAPP_UPLOAD_KEY_ALIAS=$CM_KEY_ALIAS" >> android/gradle.properties
           echo "MYAPP_UPLOAD_STORE_PASSWORD=$CM_KEYSTORE_PASSWORD" >> android/gradle.properties
           echo "MYAPP_UPLOAD_KEY_PASSWORD=$CM_KEY_PASSWORD" >> android/gradle.properties
-          # patch debug signingConfig to use the same keystore
+
+          # Patch debug signingConfig to use same keystore
           node -e "
             const fs = require('fs');
             const f = 'android/app/build.gradle';
@@ -74,21 +82,30 @@ workflows:
             c = c.replace(/storeFile\s+file\(['\"]debug\.keystore['\"]\)/, \"storeFile file('upload-keystore.jks')\");
             c = c.replace(/storePassword\s+['\"]android['\"]/, \"storePassword System.getenv('CM_KEYSTORE_PASSWORD')\");
             c = c.replace(/keyAlias\s+['\"]androiddebugkey['\"]/, \"keyAlias System.getenv('CM_KEY_ALIAS')\");
-            // PKCS12 keystore: key password == store password
             c = c.replace(/keyPassword\s+['\"]android['\"]/, \"keyPassword System.getenv('CM_KEYSTORE_PASSWORD')\");
             fs.writeFileSync(f, c);
             console.log('debug signingConfig patched');
           "
+
       - name: Build debug APK
         script: |
           cd android
           ./gradlew assembleDebug
-      - name: Print fingerprint (register this SHA-1 in Firebase)
+
+      - name: Build release AAB (Google Play)
+        script: |
+          cd android
+          ./gradlew bundleRelease
+
+      - name: Print signing fingerprint
         script: |
           keytool -list -v -keystore android/app/upload-keystore.jks -alias "$CM_KEY_ALIAS" -storepass "$CM_KEYSTORE_PASSWORD" \
             | grep -E "SHA1|SHA256" || true
+
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
+      - android/app/build/outputs/bundle/release/*.aab
+
     publishing:
       email:
         recipients:

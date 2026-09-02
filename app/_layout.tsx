@@ -1,17 +1,32 @@
-import { DarkTheme, ThemeProvider } from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useState } from 'react';
 
 import { AuthProvider } from '@/contexts/auth-context';
+import AuroraSplash from '@/components/aurora-splash';
+
+SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   anchor: 'index',
 };
 
 export default function RootLayout() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    SplashScreen.hideAsync();
+  }, []);
+
+  if (showSplash) {
+    return <AuroraSplash onFinish={() => setShowSplash(false)} />;
+  }
+
   return (
     <AuthProvider>
-      <ThemeProvider value={DarkTheme}>
+      <ThemeProvider value={DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="login" />
@@ -20,6 +35,7 @@ export default function RootLayout() {
           <Stack.Screen name="astrologer" />
           <Stack.Screen name="edit-profile" />
           <Stack.Screen name="palm-reading" />
+          <Stack.Screen name="palm-history" />
           <Stack.Screen name="topup" />
           <Stack.Screen name="astrologers-market" />
           <Stack.Screen name="astrologer-portfolio" />
@@ -39,7 +55,7 @@ export default function RootLayout() {
           <Stack.Screen name="astrologer-notifications" />
           <Stack.Screen name="astrologer-match" />
         </Stack>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </ThemeProvider>
     </AuthProvider>
   );

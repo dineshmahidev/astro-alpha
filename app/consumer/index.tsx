@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,11 +10,11 @@ import {
   View,
   Text,
   ImageBackground,
-  Animated,
   Dimensions,
+  Animated,
+  FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Avatar } from '@/components/avatar';
@@ -32,103 +32,127 @@ const PURPLE = '#8B5CF6';
 const TEXT_DARK = '#1D1D1C';
 const TEXT_MID = '#555555';
 const TEXT_LIGHT = '#888888';
-const { width: SCREEN_W } = Dimensions.get('window');
 
-const BANNERS = [
-  {
-    id: 'tarot',
-    title: 'Pull a Tarot Card',
-    sub: 'Discover your destiny',
-    btn: 'Draw Card',
-    icon: 'star' as const,
-    bg: '#0D2A3D',
-    mystery: 'A hidden truth is about to reveal itself...',
-  },
+const SLIDES = [
+  { id: '1', image: require('../../assets/tarot-banner.png') },
+  { id: '2', image: require('../../assets/match-banner.png') },
+  { id: '3', image: require('../../assets/astrologer-eranings.png') },
 ];
 
+const SCREEN_W = Dimensions.get('window').width;
+
 const SERVICES = [
-  { icon: 'people-outline' as const, label: 'Astrologers', color: '#E57373', route: '/astrologers-market' },
-  { icon: 'hand-left-outline' as const, label: 'Palm\nReading', color: '#FFB74D', route: '/palm-reading' },
-  { icon: 'document-text-outline' as const, label: 'Kundli', color: '#4FC3F7', route: '/kundli' },
-  { icon: 'heart-outline' as const, label: 'Match\nMaking', color: '#BA68C8', route: '/match' },
+  { icon: 'people' as const, label: 'Astrologers', color: '#E57373', route: '/astrologers-market' },
+  { icon: 'hand-left' as const, label: 'Palm Reading', color: '#FFB74D', route: '/palm-reading' },
+  { icon: 'document-text' as const, label: 'Kundli', color: '#4FC3F7', route: '/kundli' },
+  { icon: 'heart' as const, label: 'Match Making', color: '#BA68C8', route: '/match' },
 ];
 
 export default function ConsumerHome() {
   const router = useRouter();
-  const { user, birthDetails } = useAuth();
+  const { user, birthDetails, credits } = useAuth();
   const { astrologers } = useAstrologers();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<'ai' | 'astro'>('ai');
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [headlineIndex, setHeadlineIndex] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
 
-  // Scrolling headline
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const HEADLINES = [
-    'Discover your destiny with AI-powered astrology',
-    'Check your daily horoscope now',
-    'Find your perfect match with 10 Porutham',
-    'Get personalized kundli analysis',
-    'Chat with expert astrologers online',
-  ];
+  const topAstrologers = astrologers.slice(0, 6);
+
+  const headlines = [
+    `Hi, ${user?.name?.split(' ')[0] ?? 'User'} 👋`,
+    birthDetails?.rashi ? `Rasi • ${birthDetails.rashi}` : null,
+    birthDetails?.nakshatra ? `Nakshatra • ${birthDetails.nakshatra}` : null,
+    birthDetails?.rashi ? `Padam • ${birthDetails.nakshatra ?? ''}` : null,
+  ].filter(Boolean) as string[];
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      Animated.timing(scrollX, { toValue: -SCREEN_W * HEADLINES.length, duration: 30000, useNativeDriver: true }).start(() => {
-        scrollX.setValue(0);
+    if (headlines.length <= 1) return;
+    const interval = setInterval(() => {
+      Animated.timing(fadeAnim, { toValue: 0, duration: 400, useNativeDriver: true }).start(() => {
+        setHeadlineIndex((prev) => (prev + 1) % headlines.length);
+        Animated.timing(fadeAnim, { toValue: 1, duration: 400, useNativeDriver: true }).start();
       });
-    }, 32000);
-    return () => clearInterval(timer);
-  }, []);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [headlines.length]);
 
-  const topAstrologers = astrologers.slice(0, 3);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlideIndex((prev) => {
+        const next = (prev + 1) % SLIDES.length;
+        flatListRef.current?.scrollToOffset({ offset: next * SCREEN_W, animated: true });
+        return next;
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <ThemedView style={s.screen}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <SideDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
       {drawerOpen && <View style={s.blurOverlay} />}
-      <SafeAreaView style={s.safe} edges={['top']}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
 
-          {/* Header */}
-          <View style={s.header}>
-            <View style={s.headerLeft}>
-              <TouchableOpacity style={s.hamburger} onPress={() => setDrawerOpen(true)}>
-                <View style={s.hamLine1} />
-                <View style={s.hamLine2} />
-                <View style={s.hamLine3} />
-              </TouchableOpacity>
-              <View>
-                <ThemedText style={s.greeting}>Hi, {user?.name?.split(' ')[0] ?? 'User'} 👋</ThemedText>
-                {birthDetails?.rashi && (
-                  <Text style={s.userRasi}>{birthDetails.rashi} • {birthDetails.nakshatra ?? ''}</Text>
-                )}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={s.scroll}>
+          {/* Auto Slider Top 25% */}
+          <View style={s.sliderContainer}>
+            <SafeAreaView style={s.videoHeader} edges={['top']}>
+              <View style={s.header}>
+                <TouchableOpacity style={s.hamburger} onPress={() => setDrawerOpen(true)}>
+                  <View style={s.hamLine1} />
+                  <View style={s.hamLine2} />
+                  <View style={s.hamLine3} />
+                </TouchableOpacity>
+                <View style={s.headerSpacer} />
+                <TouchableOpacity style={s.coinBadge} onPress={() => router.push('/topup')}>
+                  <Ionicons name="wallet-outline" size={16} color="#FFF" />
+                  <Text style={s.coinText}>{credits ?? 300}</Text>
+                </TouchableOpacity>
               </View>
-            </View>
-            <View style={s.headerRight}>
-              <TouchableOpacity style={s.coinBadge} onPress={() => router.push('/topup')}>
-                <Text style={s.coinRupee}>₹</Text>
-                <ThemedText style={s.coinText}>300</ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => router.push('/edit-profile')}>
-                <Avatar uri="" name={user?.name ?? 'U'} size={36} color={ACCENT} />
-              </TouchableOpacity>
-            </View>
-          </View>
+            </SafeAreaView>
 
-          {/* Scrolling Headline */}
-          <View style={s.headlineWrap}>
-            <Animated.View style={[s.headlineTrack, { transform: [{ translateX: scrollX }] }]}>
-              {[...HEADLINES, ...HEADLINES].map((h, i) => (
-                <Text key={i} style={s.headlineText}>{h}   •   </Text>
+            <FlatList
+              ref={flatListRef}
+              data={SLIDES}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              scrollEnabled={false}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <Image source={item.image} style={s.slideImage} contentFit="cover" />
+              )}
+            />
+
+            {/* Dots */}
+            <View style={s.dotsContainer}>
+              {SLIDES.map((_, i) => (
+                <View key={i} style={[s.dot, slideIndex === i && s.dotActive]} />
               ))}
-            </Animated.View>
+            </View>
+
+            {/* Separator line */}
+            <View style={s.sliderLine} />
           </View>
 
-          {/* Services Row */}
-          <View style={s.servicesRow}>
+          {/* Animated Headline */}
+          <View style={s.rasiBar}>
+            <Animated.Text style={[s.rasiText, { opacity: fadeAnim }]}>
+              {headlines[headlineIndex]}
+            </Animated.Text>
+          </View>
+
+          {/* Services Grid */}
+          <View style={s.servicesGrid}>
             {SERVICES.map((svc) => (
               <TouchableOpacity key={svc.label} style={s.serviceCard} onPress={() => svc.route && router.push(svc.route as any)}>
-                <Ionicons name={svc.icon} size={26} color={svc.color} />
-                <ThemedText style={s.serviceLabel}>{svc.label}</ThemedText>
+                <View style={s.serviceIcon}>
+                  <Ionicons name={svc.icon} size={28} color="#FFFFFF" />
+                </View>
+                <Text style={s.serviceLabel}>{svc.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -144,82 +168,112 @@ export default function ConsumerHome() {
                   resizeMode="cover"
                 >
                   <View style={s.bannerLeft}>
-                    <Text style={s.bannerTitle}>{BANNERS[0].title}</Text>
-                    <Text style={s.bannerSub}>{BANNERS[0].sub}</Text>
+                    <Text style={s.bannerTitle}>Pull a Tarot Card</Text>
+                    <Text style={s.bannerSub}>Discover your destiny</Text>
                     <View style={s.bannerBtn}>
-                      <Text style={s.bannerBtnText}>{BANNERS[0].btn}</Text>
+                      <Text style={s.bannerBtnText}>Draw Card</Text>
                     </View>
-                    <Text style={s.bannerMystery}>{BANNERS[0].mystery}</Text>
+                    <Text style={s.bannerMystery}>A hidden truth is about to reveal itself...</Text>
                   </View>
                 </ImageBackground>
               </TouchableOpacity>
             </View>
           </View>
 
-          {/* AI Specialists */}
+          {/* AI Specialists / Astrologers Toggle */}
           <View style={s.sectionHeader}>
-            <ThemedText style={s.sectionTitle}>AI Specialists</ThemedText>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setActiveSection('ai')}>
+              <Text style={[s.sectionTab, activeSection === 'ai' && s.sectionTabActive]}>AI Specialists</Text>
+            </TouchableOpacity>
+            <View style={s.sectionPipe} />
+            <TouchableOpacity onPress={() => setActiveSection('astro')}>
+              <Text style={[s.sectionTab, activeSection === 'astro' && s.sectionTabActive]}>Astrologers</Text>
+            </TouchableOpacity>
+            <View style={{ flex: 1 }} />
+            <TouchableOpacity onPress={() => router.push(activeSection === 'ai' ? '/ai-specialist' : '/astrologers-market')}>
               <ThemedText style={s.viewAll}>VIEW ALL</ThemedText>
             </TouchableOpacity>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.aiRow}>
-            {AI_SPECIALISTS.map((spec) => (
-              <TouchableOpacity key={spec.id} style={s.aiCard} onPress={() => router.push(`/ai-specialist/${spec.id}`)}>
-                <Image source={spec.avatar} style={s.aiImage} contentFit="cover" />
-                <ThemedText style={s.aiName} numberOfLines={1}>{spec.name}</ThemedText>
-                <ThemedText style={s.aiTag} numberOfLines={1}>{spec.tagline}</ThemedText>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
 
-          {/* Top Astrologers */}
-          <View style={s.sectionHeader}>
-            <ThemedText style={s.sectionTitle}>Our Top Astrologers</ThemedText>
-            <TouchableOpacity>
-              <ThemedText style={s.viewAll}>VIEW ALL</ThemedText>
-            </TouchableOpacity>
-          </View>
-          {topAstrologers.map((astro) => (
-            <View key={astro.id} style={s.astroCard}>
-              <View style={s.astroTop}>
-                <Avatar uri={astro.avatar ?? ''} name={astro.name} size={44} color={ACCENT} />
-                <View style={s.astroInfo}>
-                  <ThemedText style={s.astroName}>{astro.name}</ThemedText>
-                  <ThemedText style={s.astroSpec}>{astro.specialization?.[0] ?? 'Vedic Astrology'}</ThemedText>
-                  <ThemedText style={s.astroLang}>{astro.languages?.join(', ') ?? 'English, Hindi'}</ThemedText>
-                </View>
-                <View style={s.astroPrice}>
-                  <Ionicons name="time" size={14} color={ACCENT} />
-                  <ThemedText style={s.priceText}>30/min</ThemedText>
-                </View>
-              </View>
-              <View style={s.astroActions}>
-                <TouchableOpacity style={s.actionBtn}>
-                  <Ionicons name="chatbubble" size={16} color={ACCENT} />
-                  <ThemedText style={s.actionText}>Chat</ThemedText>
+          {/* AI Specialists List */}
+          {activeSection === 'ai' && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.aiRow}>
+              {AI_SPECIALISTS.map((spec) => (
+                <TouchableOpacity key={spec.id} style={s.aiCard} onPress={() => router.push(`/ai-specialist/${spec.id}`)}>
+                  <Image source={spec.avatar} style={s.aiImage} contentFit="cover" />
+                  <View style={s.aiOverlay} />
+                  <View style={s.aiInfo}>
+                    <View style={s.aiTopInfo}>
+                      <ThemedText style={s.aiName} numberOfLines={1}>{spec.name}</ThemedText>
+                      <ThemedText style={s.aiTag} numberOfLines={1}>{spec.tagline}</ThemedText>
+                    </View>
+                    <TouchableOpacity style={s.aiChatBtn} onPress={() => router.push(`/ai-specialist/${spec.id}`)}>
+                      <Ionicons name="chatbubble" size={12} color="#FFF" />
+                      <Text style={s.aiChatText}>Chat</Text>
+                    </TouchableOpacity>
+                  </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={s.actionBtn}>
-                  <Ionicons name="call" size={16} color={ACCENT} />
-                  <ThemedText style={s.actionText}>Call</ThemedText>
+              ))}
+            </ScrollView>
+          )}
+
+          {/* Astrologers List */}
+          {activeSection === 'astro' && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.astroRow}>
+              {topAstrologers.map((astro) => (
+                <TouchableOpacity
+                  key={astro.id}
+                  activeOpacity={0.8}
+                  style={s.astroHCard}
+                  onPress={() => router.push(`/astrologer/${astro.id}`)}
+                >
+                  <View style={s.astroHImageWrap}>
+                    {astro.avatar ? (
+                      <Image source={{ uri: astro.avatar }} style={s.astroHImage} contentFit="cover" />
+                    ) : (
+                      <View style={[s.astroHImage, { backgroundColor: ACCENT, alignItems: 'center', justifyContent: 'center' }]}>
+                        <Ionicons name="person" size={48} color="#FFF" />
+                      </View>
+                    )}
+                  </View>
+                  <View style={s.astroHInfo}>
+                    <Text style={s.astroHName} numberOfLines={1}>{astro.name}</Text>
+                    <Text style={s.astroHSpec} numberOfLines={1}>{astro.specialization?.[0] ?? 'Vedic'}</Text>
+                    <View style={s.astroHBottom}>
+                      <View style={s.astroHReview}>
+                        <Ionicons name="star" size={12} color="#FFD700" />
+                        <Text style={s.astroHReviewText}>{astro.rating ?? '4.8'}</Text>
+                        <Text style={s.astroHReviewCount}>({astro.reviewCount ?? 120})</Text>
+                      </View>
+                      <Text style={s.astroHPrice}>₹{astro.pricePerMin ?? 10}/min</Text>
+                    </View>
+                    <TouchableOpacity style={s.astroHChatBtn} onPress={() => router.push(`/chat-room/${astro.id}`)}>
+                      <Ionicons name="chatbubble" size={14} color="#FFF" />
+                      <Text style={s.astroHChatText}>Chat</Text>
+                    </TouchableOpacity>
+                  </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={s.actionBtn}>
-                  <Ionicons name="videocam" size={16} color={ACCENT} />
-                  <ThemedText style={s.actionText}>Video Call</ThemedText>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
+              ))}
+            </ScrollView>
+          )}
 
           <View style={{ height: 40 }} />
         </ScrollView>
-      </SafeAreaView>
     </ThemedView>
   );
 }
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FFFFFF' },
+  sliderContainer: { width: '100%', height: Dimensions.get('window').height * 0.25, position: 'relative' },
+  videoHeader: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 8 },
+  headerSpacer: { flex: 1 },
+  slideImage: { width: SCREEN_W, height: '100%' },
+  dotsContainer: { position: 'absolute', bottom: 20, left: 0, right: 0, flexDirection: 'row', justifyContent: 'center', gap: 6, zIndex: 10 },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: 'rgba(255,255,255,0.4)' },
+  dotActive: { backgroundColor: '#FFFFFF', width: 20 },
+  sliderLine: { height: 1, backgroundColor: BORDER },
   blurOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(255,255,255,0.7)',
@@ -228,15 +282,6 @@ const s = StyleSheet.create({
   safe: { flex: 1 },
   scroll: { paddingBottom: 40 },
 
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 12,
-  },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   hamburger: {
     width: 40,
     height: 40,
@@ -245,39 +290,57 @@ const s = StyleSheet.create({
     paddingLeft: 8,
     gap: 5,
   },
-  hamLine1: { width: 24, height: 2, backgroundColor: TEXT_DARK, borderRadius: 1 },
-  hamLine2: { width: 18, height: 2, backgroundColor: TEXT_DARK, borderRadius: 1 },
-  hamLine3: { width: 12, height: 2, backgroundColor: TEXT_DARK, borderRadius: 1 },
-  greeting: { fontSize: 20, fontWeight: 'bold', color: TEXT_DARK },
-  userRasi: { fontSize: 12, color: ACCENT, fontWeight: '600', marginTop: 2 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  hamLine1: { width: 24, height: 2, backgroundColor: '#FFFFFF', borderRadius: 1 },
+  hamLine2: { width: 18, height: 2, backgroundColor: '#FFFFFF', borderRadius: 1 },
+  hamLine3: { width: 12, height: 2, backgroundColor: '#FFFFFF', borderRadius: 1 },
   coinBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: CARD_BG,
+    backgroundColor: 'rgba(0,0,0,0.3)',
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderWidth: 1,
-    borderColor: BORDER,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
-  coinText: { fontSize: 13, fontWeight: '600', color: GREEN },
+  coinText: { fontSize: 13, fontWeight: '600', color: '#FFFFFF' },
   coinRupee: { fontSize: 14, fontWeight: '700', color: GREEN },
 
-  // Scrolling Headline
-  headlineWrap: { overflow: 'hidden', height: 28, marginHorizontal: 16, marginBottom: 8, justifyContent: 'center' },
-  headlineTrack: { flexDirection: 'row', alignItems: 'center' },
-  headlineText: { fontSize: 13, color: ACCENT, fontWeight: '500', whiteSpace: 'nowrap' },
+  // Rasi & Nakshatra with Pipe
+  headlineContainer: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 16, marginTop: 16, marginBottom: 8 },
+  pipeVertical: { width: 20, alignItems: 'center', marginRight: 10 },
+  pipeTopDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: ACCENT },
+  pipeLine: { width: 2, flex: 1, backgroundColor: ACCENT + '40' },
+  pipeMidDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: ACCENT + '80' },
+  pipeBottomDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: ACCENT },
+  headlineDetails: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  headlineLabel: { fontSize: 10, fontWeight: '600', color: ACCENT, textTransform: 'uppercase', marginRight: 4 },
+  headlineValue: { fontSize: 13, fontWeight: '600', color: TEXT_DARK },
+  headlineDivider: { width: 1, height: 16, backgroundColor: BORDER, marginHorizontal: 12 },
 
-  servicesRow: {
+  rasiBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, gap: 10 },
+  rasiText: { fontSize: 15, fontWeight: 'bold', color: ACCENT },
+  rasiPipe: { width: 1.5, height: 16, backgroundColor: ACCENT },
+
+  servicesGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
     paddingHorizontal: 16,
-    marginTop: 20,
+    marginTop: 16,
+    gap: 8,
   },
-  serviceCard: { alignItems: 'center', gap: 8, width: 72 },
-  serviceLabel: { fontSize: 12, fontWeight: '500', color: TEXT_DARK, textAlign: 'center', lineHeight: 16 },
+  serviceCard: { width: '22.5%', alignItems: 'center', paddingVertical: 10 },
+  serviceIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: ACCENT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  serviceLabel: { fontSize: 10, fontWeight: '600', color: TEXT_DARK, textAlign: 'center' },
 
   bannerWrap: { marginTop: 20 },
   bannerMargin: { marginHorizontal: 16 },
@@ -308,32 +371,92 @@ const s = StyleSheet.create({
 
   sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
     marginTop: 24,
     marginBottom: 12,
   },
+  sectionPipe: { width: 1, height: 14, backgroundColor: BORDER, marginHorizontal: 10 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', color: TEXT_DARK },
+  sectionTab: { fontSize: 16, fontWeight: 'bold', color: TEXT_LIGHT },
+  sectionTabActive: { color: TEXT_DARK },
   viewAll: { fontSize: 12, fontWeight: '600', color: ACCENT },
 
-  aiRow: { paddingHorizontal: 16, gap: 10 },
+  aiRow: { paddingHorizontal: 16, gap: 12 },
   aiCard: {
-    width: 110,
-    height: 140,
-    backgroundColor: CARD_BG,
-    borderRadius: 14,
+    width: 160,
+    height: 240,
+    backgroundColor: 'transparent',
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  aiImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  aiInfo: { flex: 1, paddingHorizontal: 10, paddingBottom: 10, justifyContent: 'flex-end' },
+  aiOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.35)', borderRadius: 16 },
+  aiTopInfo: { marginBottom: 8 },
+  aiName: { fontSize: 13, fontWeight: 'bold', color: '#FFFFFF' },
+  aiTag: { fontSize: 11, color: '#FFD700', marginTop: 2 },
+  aiBottom: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 },
+  aiReview: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  aiReviewText: { fontSize: 12, fontWeight: '600', color: TEXT_DARK },
+  aiReviewCount: { fontSize: 11, color: TEXT_MID },
+  aiChatBtn: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    backgroundColor: ACCENT,
+    borderRadius: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    marginTop: 'auto',
+    marginBottom: 8,
+  },
+  aiChatText: { fontSize: 12, fontWeight: '600', color: '#FFF' },
+
+  astroRow: { paddingHorizontal: 16, gap: 12 },
+  astroHCard: {
+    width: 160,
+    height: 240,
+    backgroundColor: CARD_BG,
+    borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: BORDER,
   },
-  aiImage: {
+  astroHImageWrap: {
     width: '100%',
-    height: 95,
+    height: 120,
   },
-  aiName: { fontSize: 12, fontWeight: '600', color: TEXT_DARK, textAlign: 'center', marginTop: 6, paddingHorizontal: 4 },
-  aiTag: { fontSize: 10, color: TEXT_MID, textAlign: 'center', lineHeight: 13, paddingHorizontal: 6 },
+  astroHImage: {
+    width: '100%',
+    height: '100%',
+  },
+  astroHInfo: { flex: 1, paddingHorizontal: 10, paddingTop: 6 },
+  astroHName: { fontSize: 13, fontWeight: 'bold', color: TEXT_DARK },
+  astroHSpec: { fontSize: 11, color: ACCENT, marginTop: 2 },
+  astroHBottom: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 },
+  astroHReview: { flexDirection: 'row', alignItems: 'center', gap: 3 },
+  astroHReviewText: { fontSize: 12, fontWeight: '600', color: TEXT_DARK },
+  astroHReviewCount: { fontSize: 11, color: TEXT_MID },
+  astroHPrice: { fontSize: 11, fontWeight: '600', color: ACCENT },
+  astroHChatBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    backgroundColor: ACCENT,
+    borderRadius: 10,
+    paddingVertical: 6,
+    marginTop: 6,
+  },
+  astroHChatText: { fontSize: 12, fontWeight: '600', color: '#FFF' },
 
   astroCard: {
     marginHorizontal: 16,
