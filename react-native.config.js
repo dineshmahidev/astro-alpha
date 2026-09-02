@@ -1,9 +1,15 @@
 module.exports = {
   dependencies: {
-    '@jitsi/react-native-sdk': {
+    'react-native-iap': {
       platforms: {
-        android: null,
-        ios: null,
+        android: {
+          sourceDir: './node_modules/react-native-iap/android',
+          packageImportPath: 'import com.dooboolab.rniap.ReactNativeIapPackage;',
+          packageInstance: 'new ReactNativeIapPackage()',
+          buildTypes: ['debug', 'release'],
+          componentDescriptors: [],
+          cmakeListsFilename: '',
+        },
       },
     },
   },
