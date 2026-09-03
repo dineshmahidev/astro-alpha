@@ -86,13 +86,13 @@ export default function AstrologerMarketScreen() {
         {/* Banner */}
         <View style={s.bannerWrap}>
           <ImageBackground
-            source={require('../assets/astrologer-eranings.png')}
+            source={require('../assets/astrologer-eranings.webp')}
             style={s.banner}
             imageStyle={s.bannerImage}
             resizeMode="cover"
           >
             <View style={s.bannerOverlay}>
-              <Image source={require('../assets/Koshmira_text.png')} style={s.bannerLogo} contentFit="contain" />
+              <Image source={require('../assets/Koshmira_text.webp')} style={s.bannerLogo} contentFit="contain" />
               <Text style={s.bannerTitle}>Astrologers</Text>
               <Text style={s.bannerSub}>Connect with verified Vedic astrologers</Text>
             </View>

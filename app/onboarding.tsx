@@ -42,11 +42,11 @@ const { width: W } = Dimensions.get('window');
 const NOW = new Date();
 
 const STEPS = [
-  { key: 'name', title: 'Your Name', titleTa: 'உங்கள் பெயர்', subtitle: 'Tell us who you are', img: require('../assets/onboard/gender_onboard.png') },
-  { key: 'gender', title: 'Gender', titleTa: 'பாலினம்', subtitle: 'Select your gender', img: require('../assets/onboard/gender_onboard.png') },
-  { key: 'dob', title: 'Date of Birth', titleTa: 'பிறந்த தேதி', subtitle: 'Tap to select your birth date', img: require('../assets/onboard/date_onboard.png') },
-  { key: 'tob', title: 'Time of Birth', titleTa: 'பிறந்த நேரம்', subtitle: 'Tap to set your birth time', img: require('../assets/onboard/time_onboard.png') },
-  { key: 'place', title: 'Birth Place', titleTa: 'பிறந்த இடம்', subtitle: 'Where were you born?', img: require('../assets/onboard/place_onboard.png') },
+  { key: 'name', title: 'Your Name', titleTa: 'உங்கள் பெயர்', subtitle: 'Tell us who you are', img: require('../assets/onboard/gender_onboard.webp') },
+  { key: 'gender', title: 'Gender', titleTa: 'பாலினம்', subtitle: 'Select your gender', img: require('../assets/onboard/gender_onboard.webp') },
+  { key: 'dob', title: 'Date of Birth', titleTa: 'பிறந்த தேதி', subtitle: 'Tap to select your birth date', img: require('../assets/onboard/date_onboard.webp') },
+  { key: 'tob', title: 'Time of Birth', titleTa: 'பிறந்த நேரம்', subtitle: 'Tap to set your birth time', img: require('../assets/onboard/time_onboard.webp') },
+  { key: 'place', title: 'Birth Place', titleTa: 'பிறந்த இடம்', subtitle: 'Where were you born?', img: require('../assets/onboard/place_onboard.webp') },
 ];
 
 /* ─── Digital Time Picker Modal ─── */

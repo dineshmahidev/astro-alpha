@@ -32,7 +32,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Astro health tips & remedies',
     taglineTa: 'ஜோதிட சுகாதார குறிப்புகள்',
     taglineHi: 'ज्योतिष स्वास्थ्य सुझाव',
-    avatar: require('@/assets/images/ai-chat/Female_healer_holding_mystical_s__202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/Female_healer_holding_mystical_s__202608170131.webp'),
     icon: 'heart',
     report: [
       'Your Leo Sun boosts heart health, but pace yourself and avoid overexertion.',
@@ -49,7 +49,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Money, career, investments & business',
     taglineTa: 'பணம், தொழில், முதலீடு & வணிகம்',
     taglineHi: 'पैसा, करियर, निवेश और व्यापार',
-    avatar: require('@/assets/images/ai-chat/Wealth_mystic_holding_golden_pen__202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/Wealth_mystic_holding_golden_pen__202608170131.webp'),
     icon: 'cash',
     report: [
       'Jupiter in the 9th house brings gains through education and guidance.',
@@ -66,7 +66,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Love, compatibility & timing',
     taglineTa: 'காதல், பொருத்தம் & நேரம்',
     taglineHi: 'प्रेम, संगतता और समय',
-    avatar: require('@/assets/images/ai-chat/Gothic_oracle_holding_glowing_rings_202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/Gothic_oracle_holding_glowing_rings_202608170131.webp'),
     icon: 'people',
     report: [
       'Venus in the 7th house promises harmony in close relationships.',
@@ -83,7 +83,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Job, growth & promotions',
     taglineTa: 'வேலை, வளர்ச்சி & பதவி உயர்வு',
     taglineHi: 'नौकरी, विकास और पदोन्नति',
-    avatar: require('@/assets/images/ai-chat/King_holding_golden_staff_202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/King_holding_golden_staff_202608170131.webp'),
     icon: 'briefcase',
     report: [
       'Mercury in the 10th house favors clear communication at work.',
@@ -100,7 +100,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Studies, exams & focus',
     taglineTa: 'படிப்பு, தேர்வு & கவனம்',
     taglineHi: 'पढ़ाई, परीक्षा और ध्यान',
-    avatar: require('@/assets/images/ai-chat/Gothic_scholar_holding_ancient_book_202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/Gothic_scholar_holding_ancient_book_202608170131.webp'),
     icon: 'school',
     report: [
       'Jupiter supports learning and higher knowledge now.',
@@ -117,7 +117,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Home, peace & bonds',
     taglineTa: 'வீடு, அமைதி & பிணைப்புகள்',
     taglineHi: 'घर, शांति और रिश्ते',
-    avatar: require('@/assets/images/ai-chat/Gothic_woman_holding_family_symbol_202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/Gothic_woman_holding_family_symbol_202608170131.webp'),
     icon: 'home',
     report: [
       'Moon in the 4th house strengthens family harmony.',
@@ -134,7 +134,7 @@ export const AI_SPECIALISTS: AISpecialist[] = [
     tagline: 'Mantras, gems & rituals',
     taglineTa: 'மந்திரங்கள், ரத்தினங்கள் & சடங்குகள்',
     taglineHi: 'मंत्र, रत्न और अनुष्ठान',
-    avatar: require('@/assets/images/ai-chat/Gothic_AI_oracle_holding_book_202608170131.jpeg'),
+    avatar: require('@/assets/images/ai-chat/Gothic_AI_oracle_holding_book_202608170131.webp'),
     icon: 'diamond',
     report: [
       'Wearing a Sun-affirming stone balances your Leo energy.',

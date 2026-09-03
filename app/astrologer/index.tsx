@@ -113,7 +113,7 @@ function AstroDashboard() {
           {/* Earnings Banner */}
           <TouchableOpacity style={s.bannerWrap} activeOpacity={0.85} onPress={() => router.push('/astrologer-payments')}>
             <ImageBackground
-              source={require('../../assets/astrologer-eranings.png')}
+              source={require('../../assets/astrologer-eranings.webp')}
               style={s.banner}
               imageStyle={s.bannerImage}
               resizeMode="cover"

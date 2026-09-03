@@ -34,9 +34,9 @@ const TEXT_MID = '#555555';
 const TEXT_LIGHT = '#888888';
 
 const SLIDES = [
-  { id: '1', image: require('../../assets/tarot-banner.png') },
-  { id: '2', image: require('../../assets/match-banner.png') },
-  { id: '3', image: require('../../assets/astrologer-eranings.png') },
+  { id: '1', image: require('../../assets/tarot-banner.webp') },
+  { id: '2', image: require('../../assets/match-banner.webp') },
+  { id: '3', image: require('../../assets/astrologer-eranings.webp') },
 ];
 
 const SCREEN_W = Dimensions.get('window').width;
@@ -162,7 +162,7 @@ export default function ConsumerHome() {
             <View style={s.bannerMargin}>
               <TouchableOpacity activeOpacity={0.85} onPress={() => router.push('/tarot')}>
                 <ImageBackground
-                  source={require('../../assets/tarot-banner.png')}
+                  source={require('../../assets/tarot-banner.webp')}
                   style={s.banner}
                   imageStyle={s.bannerImage}
                   resizeMode="cover"

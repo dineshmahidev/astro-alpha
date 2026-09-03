@@ -6,18 +6,18 @@ export type ZodiacSign = {
 };
 
 export const ZODIAC_SIGNS: ZodiacSign[] = [
-  { emoji: '♈', name: 'Aries', id: 'aries', image: require('@/assets/images/aries.png') },
-  { emoji: '♉', name: 'Taurus', id: 'taurus', image: require('@/assets/images/taurus.png') },
-  { emoji: '♊', name: 'Gemini', id: 'gemini', image: require('@/assets/images/gemini.png') },
-  { emoji: '♋', name: 'Cancer', id: 'cancer', image: require('@/assets/images/cancer.png') },
-  { emoji: '♌', name: 'Leo', id: 'leo', image: require('@/assets/images/leo.png') },
-  { emoji: '♍', name: 'Virgo', id: 'virgo', image: require('@/assets/images/virgo.png') },
-  { emoji: '♎', name: 'Libra', id: 'libra', image: require('@/assets/images/libra.png') },
-  { emoji: '♏', name: 'Scorpio', id: 'scorpio', image: require('@/assets/images/scorpio.png') },
-  { emoji: '♐', name: 'Sagittarius', id: 'sagittarius', image: require('@/assets/images/sagittarius.png') },
-  { emoji: '♑', name: 'Capricorn', id: 'capricorn', image: require('@/assets/images/capricorn.png') },
-  { emoji: '♒', name: 'Aquarius', id: 'aquarius', image: require('@/assets/images/aquarius.png') },
-  { emoji: '♓', name: 'Pisces', id: 'pisces', image: require('@/assets/images/pisces.png') },
+  { emoji: '♈', name: 'Aries', id: 'aries', image: require('@/assets/images/aries.webp') },
+  { emoji: '♉', name: 'Taurus', id: 'taurus', image: require('@/assets/images/taurus.webp') },
+  { emoji: '♊', name: 'Gemini', id: 'gemini', image: require('@/assets/images/gemini.webp') },
+  { emoji: '♋', name: 'Cancer', id: 'cancer', image: require('@/assets/images/cancer.webp') },
+  { emoji: '♌', name: 'Leo', id: 'leo', image: require('@/assets/images/leo.webp') },
+  { emoji: '♍', name: 'Virgo', id: 'virgo', image: require('@/assets/images/virgo.webp') },
+  { emoji: '♎', name: 'Libra', id: 'libra', image: require('@/assets/images/libra.webp') },
+  { emoji: '♏', name: 'Scorpio', id: 'scorpio', image: require('@/assets/images/scorpio.webp') },
+  { emoji: '♐', name: 'Sagittarius', id: 'sagittarius', image: require('@/assets/images/sagittarius.webp') },
+  { emoji: '♑', name: 'Capricorn', id: 'capricorn', image: require('@/assets/images/capricorn.webp') },
+  { emoji: '♒', name: 'Aquarius', id: 'aquarius', image: require('@/assets/images/aquarius.webp') },
+  { emoji: '♓', name: 'Pisces', id: 'pisces', image: require('@/assets/images/pisces.webp') },
 ];
 
 export function getZodiacSign(id: string): ZodiacSign | undefined {

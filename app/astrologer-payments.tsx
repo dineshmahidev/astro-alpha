@@ -110,7 +110,7 @@ export default function AstrologerPaymentsScreen() {
             {/* Banner */}
             <View style={s.bannerWrap}>
               <ImageBackground
-                source={require('../assets/astrologer-eranings.png')}
+                source={require('../assets/astrologer-eranings.webp')}
                 style={s.banner}
                 imageStyle={s.bannerImage}
                 resizeMode="cover"

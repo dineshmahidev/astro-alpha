@@ -33,7 +33,7 @@ export default function LoginScreen() {
 
   return (
     <ThemedView style={styles.screen}>
-      <Image source={require('@/assets/images/background.png')} style={StyleSheet.absoluteFill} />
+      <Image source={require('@/assets/images/background.webp')} style={StyleSheet.absoluteFill} />
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
         <View style={styles.content}>
           <View style={styles.logoWrap}>

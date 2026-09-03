@@ -42,7 +42,7 @@ export default function ChatDetailScreen() {
   return (
     <ThemedView style={styles.screen}>
       <Image
-        source={require('@/assets/images/background.png')}
+        source={require('@/assets/images/background.webp')}
         style={StyleSheet.absoluteFill}
         contentFit="cover"
         pointerEvents="none"

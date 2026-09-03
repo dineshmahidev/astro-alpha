@@ -181,7 +181,7 @@ export default function ConsumerMatchScreen() {
             <Ionicons name="close" size={22} color="#FFFFFF" />
           </TouchableOpacity>
           <ImageBackground
-            source={require('../assets/match-banner.png')}
+            source={require('../assets/match-banner.webp')}
             style={s.popupBanner}
             imageStyle={s.popupBannerImage}
             contentFit="cover"
@@ -543,7 +543,7 @@ export default function ConsumerMatchScreen() {
           {/* Banner */}
           <View style={s.bannerWrap}>
             <ImageBackground
-              source={require('../assets/match-banner.png')}
+              source={require('../assets/match-banner.webp')}
               style={s.banner}
               imageStyle={s.bannerImage}
               contentFit="cover"

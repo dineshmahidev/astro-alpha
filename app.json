@@ -24,11 +24,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "softwareKeyboardLayoutMode": "resize",
-      "notification": {
-        "icon": "./assets/images/notification-icon.png",
-        "color": "#D4AF37"
-      }
+      "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
       "output": "static",
@@ -42,7 +38,9 @@
         {
           "android": {
             "usesCleartextTraffic": true,
-            "minSdkVersion": 28
+            "minSdkVersion": 28,
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
           }
         }
       ],

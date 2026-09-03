@@ -28,29 +28,29 @@ const TEXT_DIM = '#999999';
 const GREEN = '#7BD88F';
 
 const TAROT_DECK = [
-  { name: 'The Fool', meaning: 'New beginnings, innocence, leap of faith.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Fool_tarot_card_artwork_202608162246.jpeg') },
-  { name: 'The Magician', meaning: 'Manifestation, power, willpower.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Magician_tarot_card_with_altar_202608162246.jpeg') },
-  { name: 'The Empress', meaning: 'Abundance, nurturing, beauty.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Empress_tarot_card_202608162246.jpeg') },
-  { name: 'The Hermit', meaning: 'Introspection, soul-searching, guidance.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Hermit_tarot_card_art_202608162246.jpeg') },
-  { name: 'The Tower', meaning: 'Sudden change, upheaval, revelation.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Tower_tarot_card_struck_202608162246.jpeg') },
-  { name: 'The Hanged Man', meaning: 'Pause, surrender, new perspective.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Hanged_Man_tarot_card_202608162246.jpeg') },
-  { name: 'Temperance', meaning: 'Balance, moderation, patience.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Temperance_tarot_card_design_202608162246.jpeg') },
-  { name: 'The World', meaning: 'Completion, accomplishment, wholeness.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_World_tarot_card_202608162246.jpeg') },
-  { name: 'Judgement', meaning: 'Rebirth, calling, reflection.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Gothic_tarot_card_Judgement_202608162246.jpeg') },
-  { name: 'Knight of Cups', meaning: 'Romance, charm, imagination.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Knight_of_Cups_tarot_card_202608162246.jpeg') },
-  { name: 'Queen of Cups', meaning: 'Compassion, calm, intuition.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Queen_of_Cups_tarot_card_202608162246.jpeg') },
-  { name: 'King of Cups', meaning: 'Emotional balance, generosity.', position: 'past' as const, img: require('@/assets/images/tarot-cards/King_of_Cups_tarot_card_202608162246.jpeg') },
-  { name: 'Two of Wands', meaning: 'Planning, decisions, discovery.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Two_of_Wands_tarot_card_202608162246.jpeg') },
-  { name: 'Ace of Wands', meaning: 'Inspiration, new energy, potential.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Ace_of_Wands_tarot_card_202608162246.jpeg') },
-  { name: 'Four of Swords', meaning: 'Rest, relaxation, recovery.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Four_of_Swords_tarot_card_202608162246.jpeg') },
-  { name: 'Six of Pentacles', meaning: 'Generosity, sharing, charity.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Six_of_Pentacles_tarot_card_202608162246.jpeg') },
-  { name: 'Seven of Swords', meaning: 'Strategy, planning, resourcefulness.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Seven_of_Swords_tarot_card_202608162246.jpeg') },
-  { name: 'Eight of Wands', meaning: 'Speed, movement, swift change.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Eight_of_Wands_tarot_card_202608162246.jpeg') },
-  { name: 'Ten of Cups', meaning: 'Happiness, alignment, harmony.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Ten_of_Cups_tarot_card_202608162246.jpeg') },
-  { name: 'Page of Wands', meaning: 'Enthusiasm, exploration, discovery.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Page_of_Wands_tarot_card_202608162246.jpeg') },
-  { name: 'King of Wands', meaning: 'Natural-born leader, boldness.', position: 'past' as const, img: require('@/assets/images/tarot-cards/King_of_Wands_tarot_card_202608162246.jpeg') },
-  { name: 'Queen of Pentacles', meaning: 'Nurturing, practical, abundance.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Queen_of_Pentacles_tarot_card_202608162246.jpeg') },
-  { name: 'Gargoyle', meaning: 'Protection, hidden fears, strength.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Gargoyle_tarot_card_design_202608162246.jpeg') },
+  { name: 'The Fool', meaning: 'New beginnings, innocence, leap of faith.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Fool_tarot_card_artwork_202608162246.webp') },
+  { name: 'The Magician', meaning: 'Manifestation, power, willpower.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Magician_tarot_card_with_altar_202608162246.webp') },
+  { name: 'The Empress', meaning: 'Abundance, nurturing, beauty.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Empress_tarot_card_202608162246.webp') },
+  { name: 'The Hermit', meaning: 'Introspection, soul-searching, guidance.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Hermit_tarot_card_art_202608162246.webp') },
+  { name: 'The Tower', meaning: 'Sudden change, upheaval, revelation.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Tower_tarot_card_struck_202608162246.webp') },
+  { name: 'The Hanged Man', meaning: 'Pause, surrender, new perspective.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_Hanged_Man_tarot_card_202608162246.webp') },
+  { name: 'Temperance', meaning: 'Balance, moderation, patience.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Temperance_tarot_card_design_202608162246.webp') },
+  { name: 'The World', meaning: 'Completion, accomplishment, wholeness.', position: 'past' as const, img: require('@/assets/images/tarot-cards/The_World_tarot_card_202608162246.webp') },
+  { name: 'Judgement', meaning: 'Rebirth, calling, reflection.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Gothic_tarot_card_Judgement_202608162246.webp') },
+  { name: 'Knight of Cups', meaning: 'Romance, charm, imagination.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Knight_of_Cups_tarot_card_202608162246.webp') },
+  { name: 'Queen of Cups', meaning: 'Compassion, calm, intuition.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Queen_of_Cups_tarot_card_202608162246.webp') },
+  { name: 'King of Cups', meaning: 'Emotional balance, generosity.', position: 'past' as const, img: require('@/assets/images/tarot-cards/King_of_Cups_tarot_card_202608162246.webp') },
+  { name: 'Two of Wands', meaning: 'Planning, decisions, discovery.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Two_of_Wands_tarot_card_202608162246.webp') },
+  { name: 'Ace of Wands', meaning: 'Inspiration, new energy, potential.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Ace_of_Wands_tarot_card_202608162246.webp') },
+  { name: 'Four of Swords', meaning: 'Rest, relaxation, recovery.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Four_of_Swords_tarot_card_202608162246.webp') },
+  { name: 'Six of Pentacles', meaning: 'Generosity, sharing, charity.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Six_of_Pentacles_tarot_card_202608162246.webp') },
+  { name: 'Seven of Swords', meaning: 'Strategy, planning, resourcefulness.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Seven_of_Swords_tarot_card_202608162246.webp') },
+  { name: 'Eight of Wands', meaning: 'Speed, movement, swift change.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Eight_of_Wands_tarot_card_202608162246.webp') },
+  { name: 'Ten of Cups', meaning: 'Happiness, alignment, harmony.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Ten_of_Cups_tarot_card_202608162246.webp') },
+  { name: 'Page of Wands', meaning: 'Enthusiasm, exploration, discovery.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Page_of_Wands_tarot_card_202608162246.webp') },
+  { name: 'King of Wands', meaning: 'Natural-born leader, boldness.', position: 'past' as const, img: require('@/assets/images/tarot-cards/King_of_Wands_tarot_card_202608162246.webp') },
+  { name: 'Queen of Pentacles', meaning: 'Nurturing, practical, abundance.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Queen_of_Pentacles_tarot_card_202608162246.webp') },
+  { name: 'Gargoyle', meaning: 'Protection, hidden fears, strength.', position: 'past' as const, img: require('@/assets/images/tarot-cards/Gargoyle_tarot_card_design_202608162246.webp') },
 ];
 
 type SpreadCard = { name: string; meaning: string; position: string; img: any };
@@ -295,7 +295,7 @@ export default function TarotScreen() {
           </TouchableOpacity>
           <Text style={s.headerTitle}>{lang === 'ta' ? 'தரோட் ரீடிங்' : lang === 'hi' ? 'टैरो रीडिंग' : 'Tarot Reading'}</Text>
           <TouchableOpacity style={s.headerRight}>
-            <Image source={require('../assets/images/quick-action/tarot.png')} style={s.headerIcon} contentFit="cover" />
+            <Image source={require('../assets/images/quick-action/tarot.webp')} style={s.headerIcon} contentFit="cover" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -348,13 +348,13 @@ export default function TarotScreen() {
               {/* Banner */}
               <View style={s.bannerWrap}>
                 <ImageBackground
-                  source={require('../assets/tarot-banner.png')}
+                  source={require('../assets/tarot-banner.webp')}
                   style={s.banner}
                   imageStyle={s.bannerImage}
                   resizeMode="cover"
                 >
                 <View style={s.bannerOverlay}>
-                  <Image source={require('../assets/Koshmira_text.png')} style={s.bannerLogo} contentFit="contain" />
+                  <Image source={require('../assets/Koshmira_text.webp')} style={s.bannerLogo} contentFit="contain" />
                   <Text style={s.bannerTitle}>{lang === 'ta' ? 'தரோட் ரீடிங்' : lang === 'hi' ? 'टैरो रीडिंग' : 'Tarot Reading'}</Text>
                   <Text style={s.bannerSub}>{lang === 'ta' ? 'கார்டுகள் உங்களுக்காக என்ன வைத்திருக்கின்றன என்பதை வெளிப்படுத்துங்கள்' : lang === 'hi' ? 'कार्ड आपके लिए क्या छुपा रहे हैं, जानें' : 'Reveal what the cards hold for you'}</Text>
                 </View>

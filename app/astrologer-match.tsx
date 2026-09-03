@@ -583,7 +583,7 @@ export default function AstrologerMatchScreen() {
           {/* Match Banner */}
           <View style={s.bannerWrap}>
             <ImageBackground
-              source={require('../assets/match-banner.png')}
+              source={require('../assets/match-banner.webp')}
               style={s.banner}
               imageStyle={s.bannerImage}
               contentFit="cover"
