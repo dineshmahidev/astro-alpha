@@ -46,22 +46,6 @@
           }
         }
       ],
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your camera to scan your palm.",
-          "enableMicrophonePermission": false
-        }
-      ],
-      [
-        "./node_modules/expo-vision-camera-v4-mediapipe/plugin/index.js",
-        {
-          "numHands": 1,
-          "minDetectionConfidence": 0.6,
-          "minPresenceConfidence": 0.6,
-          "minTrackingConfidence": 0.6
-        }
-      ],
       "@react-native-firebase/app",
       [
         "@react-native-google-signin/google-signin/app.plugin.js",
